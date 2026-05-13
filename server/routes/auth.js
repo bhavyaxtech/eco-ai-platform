@@ -1,6 +1,7 @@
 import express from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import User from '../models/User.js';
 
 const router = express.Router();
 
@@ -9,7 +10,7 @@ const JWT_SECRET =
   'your-secret-key';
 
 /* FAKE DATABASE */
-const users = [];
+
 
 /* REGISTER */
 router.post(
@@ -25,11 +26,12 @@ router.post(
       } = req.body;
 
       const existingUser =
-        users.find(
-          (user) =>
-            user.email === email ||
-            user.username === username
-        );
+  await User.findOne({
+    $or: [
+      { email },
+      { username },
+    ],
+  });
 
       if (existingUser) {
 
@@ -47,8 +49,7 @@ router.post(
 
       /* INITIAL USER */
 
-      const newUser = {
-
+      const newUser = new User({
         id: users.length + 1,
 
         username,
@@ -63,9 +64,9 @@ router.post(
         /* STARTING POINTS */
 
         points: 1200,
-      };
+      });
 
-      users.push(newUser);
+      await newUser.save();
 
       const token = jwt.sign(
         {
@@ -124,10 +125,10 @@ router.post(
         password,
       } = req.body;
 
-      const user = users.find(
-        (user) =>
-          user.email === email
-      );
+      const user =
+  await User.findOne({
+    email,
+  });
 
       if (!user) {
 

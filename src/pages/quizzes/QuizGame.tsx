@@ -14,7 +14,11 @@ import {
   Home,
   CheckCircle2,
   XCircle,
+  Loader2,
+  Sparkles,
 } from 'lucide-react';
+
+import { motion } from 'framer-motion';
 
 import { useAuthStore } from '../../lib/store';
 
@@ -46,6 +50,9 @@ function QuizGame() {
   const [loading, setLoading] =
     useState(true);
 
+  const [error, setError] =
+    useState('');
+
   const [
     currentQuestion,
     setCurrentQuestion,
@@ -66,34 +73,55 @@ function QuizGame() {
   const [isCorrect, setIsCorrect] =
     useState<boolean | null>(null);
 
+  /* FETCH QUIZ */
+
   useEffect(() => {
 
-    fetch(
-      `http://127.0.0.1:5000/api/quizzes/${id}`
-    )
-      .then((res) => res.json())
-      .then((data) => {
+    const fetchQuiz = async () => {
+
+      try {
+
+        const response = await fetch(
+          `http://127.0.0.1:5000/api/quizzes/${id}`
+        );
+
+        if (!response.ok) {
+
+          throw new Error(
+            'Quiz not found'
+          );
+        }
+
+        const data =
+          await response.json();
 
         setQuiz(data);
 
+      } catch (err: any) {
+
+        setError(
+          err.message ||
+            'Failed to load quiz'
+        );
+
+      } finally {
+
         setLoading(false);
+      }
+    };
 
-      })
-      .catch((error) => {
-
-        console.error(error);
-
-        setLoading(false);
-
-      });
+    fetchQuiz();
 
   }, [id]);
+
+  /* HANDLE ANSWER */
 
   const handleAnswer = (
     option: string
   ) => {
 
-    if (!quiz) return;
+    if (!quiz || selected)
+      return;
 
     setSelected(option);
 
@@ -111,7 +139,7 @@ function QuizGame() {
 
     if (correct) {
 
-      updatedScore = score + 1;
+      updatedScore += 1;
 
       setScore(updatedScore);
     }
@@ -149,8 +177,10 @@ function QuizGame() {
         setShowResult(true);
       }
 
-    }, 1400);
+    }, 1500);
   };
+
+  /* RESTART */
 
   const restartQuiz = () => {
 
@@ -167,37 +197,79 @@ function QuizGame() {
     setIsCorrect(null);
   };
 
+  /* LOADING */
+
   if (loading) {
 
     return (
 
-      <div className="min-h-screen flex items-center justify-center text-white text-3xl font-bold">
+      <div className="min-h-screen flex items-center justify-center">
 
-        Loading Quiz...
+        <div className="flex items-center gap-4 text-green-500 text-2xl font-bold">
+
+          <Loader2 className="animate-spin h-8 w-8" />
+
+          Loading Quiz...
+
+        </div>
 
       </div>
     );
   }
 
-  if (!quiz) {
+  /* ERROR */
+
+  if (error || !quiz) {
 
     return (
 
-      <div className="min-h-screen flex items-center justify-center text-red-500 text-3xl font-bold">
+      <div className="min-h-screen flex items-center justify-center">
 
-        Quiz not found
+        <div className="bg-red-500/10 border border-red-500/20 px-10 py-8 rounded-3xl text-center">
+
+          <h1 className="text-4xl font-black text-red-500">
+
+            Quiz Not Found
+
+          </h1>
+
+          <p className="text-gray-400 mt-3">
+
+            {error}
+          </p>
+
+        </div>
 
       </div>
     );
   }
 
+  /* RESULT SCREEN */
+
   if (showResult) {
+
+    const percentage =
+      Math.round(
+        (score /
+          quiz.questions.length) *
+          100
+      );
 
     return (
 
       <div className="max-w-4xl mx-auto px-6 py-16">
 
-        <div className="bg-[#111827] border border-white/10 rounded-[32px] p-12 shadow-[0_20px_80px_rgba(0,0,0,0.5)] text-center">
+        <motion.div
+          initial={{
+            opacity: 0,
+            y: 30,
+          }}
+          animate={{
+            opacity: 1,
+            y: 0,
+          }}
+          className="bg-[#111827] border border-white/10 rounded-[32px] p-12 text-center shadow-[0_20px_80px_rgba(0,0,0,0.5)]"
+        >
 
           <div className="flex justify-center mb-8">
 
@@ -209,27 +281,26 @@ function QuizGame() {
 
           </div>
 
-          <h1 className="text-5xl font-black text-white mb-6">
+          <h1 className="text-5xl font-black text-white">
 
             Quiz Completed 🎉
 
           </h1>
 
-          <div className="text-7xl font-black text-green-400">
+          <div className="mt-8 text-7xl font-black text-green-400">
 
             {score}/{quiz.questions.length}
 
           </div>
 
-          <p className="text-gray-400 text-xl mt-5">
+          <div className="mt-3 text-2xl text-gray-300">
 
-            Amazing work learning sustainability.
+            {percentage}% Score
+          </div>
 
-          </p>
+          <div className="mt-8 bg-green-500/10 border border-green-500/20 rounded-3xl p-6 inline-block">
 
-          <div className="mt-8 bg-green-500/10 border border-green-500/20 rounded-2xl p-6 inline-block">
-
-            <div className="text-green-400 text-4xl font-black">
+            <div className="text-5xl font-black text-green-400">
 
               +{earnedXP} XP
 
@@ -237,15 +308,15 @@ function QuizGame() {
 
             <p className="text-gray-400 mt-2">
 
-              50 points added for every correct answer
+              Great sustainability learning progress 🌱
 
             </p>
 
           </div>
 
-          <div className="mt-5 text-lg text-gray-300">
+          <div className="mt-6 text-xl text-gray-300">
 
-            Current Score:
+            Current Points:
             {' '}
             <span className="text-green-400 font-bold">
               {user?.points}
@@ -257,7 +328,7 @@ function QuizGame() {
 
             <button
               onClick={restartQuiz}
-              className="flex items-center gap-3 bg-green-500 hover:bg-green-600 text-white px-8 py-4 rounded-2xl font-bold transition-all duration-300"
+              className="flex items-center gap-3 bg-green-500 hover:bg-green-600 text-white px-8 py-4 rounded-2xl font-bold transition"
             >
 
               <RotateCcw className="h-5 w-5" />
@@ -268,7 +339,7 @@ function QuizGame() {
 
             <Link
               to="/quizzes"
-              className="flex items-center gap-3 bg-white/10 hover:bg-white/20 border border-white/10 text-white px-8 py-4 rounded-2xl font-bold transition-all duration-300"
+              className="flex items-center gap-3 bg-white/10 hover:bg-white/20 border border-white/10 text-white px-8 py-4 rounded-2xl font-bold transition"
             >
 
               <Home className="h-5 w-5" />
@@ -279,7 +350,7 @@ function QuizGame() {
 
           </div>
 
-        </div>
+        </motion.div>
 
       </div>
     );
@@ -298,7 +369,7 @@ function QuizGame() {
 
         {/* HEADER */}
 
-        <div className="flex items-center justify-between flex-wrap gap-5 mb-10">
+        <div className="flex justify-between items-center flex-wrap gap-5 mb-10">
 
           <div>
 
@@ -319,10 +390,10 @@ function QuizGame() {
           <div className="bg-green-500/10 border border-green-500/20 px-5 py-3 rounded-2xl">
 
             <div className="text-sm text-gray-400">
-              Current Score
+              Score
             </div>
 
-            <div className="text-2xl font-black text-green-400">
+            <div className="text-3xl font-black text-green-400">
 
               {score * 50}
 
@@ -336,7 +407,7 @@ function QuizGame() {
 
         <div className="mb-10">
 
-          <div className="flex justify-between mb-3 text-gray-300 font-semibold">
+          <div className="flex justify-between text-gray-300 mb-3">
 
             <span>
               Question {currentQuestion + 1}
@@ -348,15 +419,18 @@ function QuizGame() {
 
           </div>
 
-          <div className="w-full bg-white/10 h-3 rounded-full overflow-hidden">
+          <div className="w-full h-3 bg-white/10 rounded-full overflow-hidden">
 
-            <div
-              className="bg-gradient-to-r from-green-400 to-emerald-500 h-3 rounded-full transition-all duration-500"
-              style={{
+            <motion.div
+              initial={{
+                width: 0,
+              }}
+              animate={{
                 width: `${((currentQuestion + 1) /
                   quiz.questions.length) *
                   100}%`,
               }}
+              className="h-3 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full"
             />
 
           </div>
@@ -382,12 +456,13 @@ function QuizGame() {
           {question.options.map(
             (option, index) => (
 
-              <button
+              <motion.button
+                whileHover={{
+                  scale: 1.01,
+                }}
                 key={index}
                 onClick={() =>
-                  handleAnswer(
-                    option
-                  )
+                  handleAnswer(option)
                 }
                 disabled={!!selected}
                 className={`w-full p-6 rounded-2xl border text-left text-lg font-semibold transition-all duration-300
@@ -396,14 +471,14 @@ function QuizGame() {
                   selected === option
                     ? option ===
                       question.answer
-                      ? 'bg-green-500/20 border-green-500 text-white scale-[1.01]'
+                      ? 'bg-green-500/20 border-green-500 text-white'
                       : 'bg-red-500/20 border-red-500 text-white'
                     : 'bg-white/[0.03] border-white/10 text-gray-200 hover:border-green-400 hover:bg-green-500/10'
                 }
                 `}
               >
 
-                <div className="flex items-center justify-between">
+                <div className="flex justify-between items-center">
 
                   <span>
                     {option}
@@ -425,7 +500,7 @@ function QuizGame() {
 
                 </div>
 
-              </button>
+              </motion.button>
             )
           )}
 
@@ -435,48 +510,37 @@ function QuizGame() {
 
         {selected && (
 
-          <div className="mt-8 bg-green-500/10 border border-green-500/20 rounded-3xl p-6">
+          <motion.div
+            initial={{
+              opacity: 0,
+              y: 20,
+            }}
+            animate={{
+              opacity: 1,
+              y: 0,
+            }}
+            className="mt-8 bg-green-500/10 border border-green-500/20 rounded-3xl p-6"
+          >
 
-            <h3 className="font-bold mb-3 text-green-400 text-xl">
+            <div className="flex items-center gap-3 mb-4">
 
-              Eco Fact 🌍
+              <Sparkles className="text-green-400" />
 
-            </h3>
+              <h3 className="font-bold text-green-400 text-2xl">
 
-            <p className="text-gray-300 leading-relaxed text-lg">
+                Eco Fact 🌍
+
+              </h3>
+
+            </div>
+
+            <p className="text-gray-300 text-lg leading-relaxed">
 
               {question.fact}
 
             </p>
 
-          </div>
-
-        )}
-
-        {/* CORRECT MESSAGE */}
-
-        {selected && (
-
-          <div className="mt-6 text-center">
-
-            {isCorrect ? (
-
-              <div className="text-green-400 font-bold text-xl">
-
-                ✅ Correct Answer! +50 Points
-
-              </div>
-
-            ) : (
-
-              <div className="text-red-400 font-bold text-xl">
-
-                ❌ Wrong Answer
-              </div>
-
-            )}
-
-          </div>
+          </motion.div>
 
         )}
 
