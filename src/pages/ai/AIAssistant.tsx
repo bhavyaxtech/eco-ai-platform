@@ -1,4 +1,8 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, {
+  useState,
+  useRef,
+  useEffect,
+} from 'react';
 
 import axios from 'axios';
 
@@ -7,12 +11,9 @@ import {
   Send,
   User,
   Sparkles,
-  Leaf,
-  Recycle,
-  Wind,
-  Globe2,
-  Mic,
   Trash2,
+  Plus,
+  MessageSquare,
 } from 'lucide-react';
 
 import { motion } from 'framer-motion';
@@ -22,20 +23,19 @@ interface ChatMessage {
   text: string;
 }
 
+interface SavedChat {
+  id: number;
+  title: string;
+  messages: ChatMessage[];
+}
+
 function AIAssistant() {
 
-  const [message, setMessage] =
-    useState('');
-
-  const [loading, setLoading] =
-    useState(false);
-
-  const [chat, setChat] =
-    useState<ChatMessage[]>([
-      {
-        role: 'ai',
-        text:
-          `Hello 👋 I am EcoMind AI.
+  const starterMessage: ChatMessage[] = [
+    {
+      role: 'ai',
+      text:
+        `Hello 👋 I am EcoMind AI.
 
 I can help you with:
 • Sustainability
@@ -46,11 +46,30 @@ I can help you with:
 • Eco-friendly living
 
 Ask me anything 🌱`,
-      },
-    ]);
+    },
+  ];
+
+  const [message, setMessage] =
+    useState('');
+
+  const [loading, setLoading] =
+    useState(false);
+
+  const [chat, setChat] =
+    useState<ChatMessage[]>(starterMessage);
+
+  const [savedChats, setSavedChats] =
+    useState<SavedChat[]>([]);
+
+  const [activeChatId, setActiveChatId] =
+    useState<number | null>(null);
 
   const messagesEndRef =
     useRef<HTMLDivElement>(null);
+
+  /* =========================
+     AUTO SCROLL
+  ========================= */
 
   useEffect(() => {
 
@@ -60,12 +79,139 @@ Ask me anything 🌱`,
 
   }, [chat]);
 
-  const quickQuestions = [
-    'How can I reduce plastic waste?',
-    'What is renewable energy?',
-    'Tips for saving electricity',
-    'How does recycling help?',
-  ];
+  /* =========================
+     LOAD SAVED CHATS
+  ========================= */
+
+  useEffect(() => {
+
+    const storedChats =
+      localStorage.getItem('eco_ai_chats');
+
+    if (storedChats) {
+
+      const parsedChats =
+        JSON.parse(storedChats);
+
+      setSavedChats(parsedChats);
+
+      if (parsedChats.length > 0) {
+
+        setChat(parsedChats[0].messages);
+
+        setActiveChatId(parsedChats[0].id);
+      }
+    }
+
+  }, []);
+
+  /* =========================
+     SAVE TO LOCAL STORAGE
+  ========================= */
+
+  useEffect(() => {
+
+    localStorage.setItem(
+      'eco_ai_chats',
+      JSON.stringify(savedChats)
+    );
+
+  }, [savedChats]);
+
+  /* =========================
+     CREATE NEW CHAT
+  ========================= */
+
+  const createNewChat = () => {
+
+    setChat(starterMessage);
+
+    setActiveChatId(null);
+  };
+
+  /* =========================
+     SAVE CURRENT CHAT
+  ========================= */
+
+  const saveCurrentChat = (
+    updatedMessages: ChatMessage[]
+  ) => {
+
+    const title =
+      updatedMessages[1]?.text?.slice(0, 30) ||
+      'New Chat';
+
+    if (activeChatId) {
+
+      const updatedChats =
+        savedChats.map((chatItem) =>
+          chatItem.id === activeChatId
+            ? {
+                ...chatItem,
+                messages: updatedMessages,
+              }
+            : chatItem
+        );
+
+      setSavedChats(updatedChats);
+
+    } else {
+
+      const newChat = {
+
+        id: Date.now(),
+
+        title,
+
+        messages: updatedMessages,
+      };
+
+      const updatedChats = [
+        newChat,
+        ...savedChats,
+      ];
+
+      setSavedChats(updatedChats);
+
+      setActiveChatId(newChat.id);
+    }
+  };
+
+  /* =========================
+     LOAD CHAT
+  ========================= */
+
+  const loadChat = (
+    selectedChat: SavedChat
+  ) => {
+
+    setChat(selectedChat.messages);
+
+    setActiveChatId(selectedChat.id);
+  };
+
+  /* =========================
+     DELETE CHAT
+  ========================= */
+
+  const deleteChat = (id: number) => {
+
+    const updatedChats =
+      savedChats.filter(
+        (chatItem) => chatItem.id !== id
+      );
+
+    setSavedChats(updatedChats);
+
+    if (activeChatId === id) {
+
+      createNewChat();
+    }
+  };
+
+  /* =========================
+     SEND MESSAGE
+  ========================= */
 
   const sendMessage = async (
     customMessage?: string
@@ -86,6 +232,8 @@ Ask me anything 🌱`,
 
     setChat(updatedChat);
 
+    setMessage('');
+
     setLoading(true);
 
     try {
@@ -94,67 +242,135 @@ Ask me anything 🌱`,
         'http://127.0.0.1:5000/api/ai/ask',
         {
           question: finalMessage,
+          userId: 'demo-user',
         }
       );
 
-      setChat([
+      const finalChat = [
         ...updatedChat,
         {
-          role: 'ai',
+          role: 'ai' as const,
           text: res.data.answer,
         },
-      ]);
+      ];
 
-    } catch (err) {
+      setChat(finalChat);
 
-      console.log(err);
+      saveCurrentChat(finalChat);
 
-      setChat([
+    } catch (error) {
+
+      console.log(error);
+
+      const errorChat = [
         ...updatedChat,
         {
-          role: 'ai',
+          role: 'ai' as const,
           text:
-            '⚠️ AI failed to respond. Please try again.',
+            '⚠️ AI failed to respond.',
         },
-      ]);
-    }
+      ];
 
-    setMessage('');
+      setChat(errorChat);
+
+      saveCurrentChat(errorChat);
+    }
 
     setLoading(false);
   };
 
   return (
 
-    <div className="min-h-screen bg-[#07111f] text-white px-4 py-6">
+    <div className="min-h-screen bg-[#07111f] text-white flex">
 
-      <div className="max-w-7xl mx-auto">
+      {/* SIDEBAR */}
 
-        {/* HERO */}
+      <div className="w-[320px] bg-[#0b141d] border-r border-white/10 p-5 hidden lg:flex flex-col">
 
-        <motion.div
-          initial={{
-            opacity: 0,
-            y: 20,
-          }}
-          animate={{
-            opacity: 1,
-            y: 0,
-          }}
-          className="bg-gradient-to-r from-emerald-500 to-green-600 rounded-[32px] p-6 md:p-8 shadow-2xl mb-6 relative overflow-hidden"
+        <button
+          onClick={createNewChat}
+          className="w-full bg-emerald-500 hover:bg-emerald-600 rounded-2xl py-4 flex items-center justify-center gap-2 font-bold mb-6"
         >
 
-          <div className="absolute right-0 top-0 opacity-10">
+          <Plus className="h-5 w-5" />
 
-            <Globe2 className="w-72 h-72" />
+          New Chat
 
-          </div>
+        </button>
 
-          <div className="relative z-10">
+        <div className="flex-1 overflow-y-auto space-y-3">
+
+          {savedChats.map((c) => (
+
+            <div
+              key={c.id}
+              className={`group rounded-2xl p-4 cursor-pointer transition
+
+              ${
+                activeChatId === c.id
+                  ? 'bg-emerald-500/20'
+                  : 'bg-white/5 hover:bg-white/10'
+              }
+              `}
+            >
+
+              <div className="flex items-start justify-between gap-3">
+
+                <div
+                  onClick={() => loadChat(c)}
+                  className="flex items-start gap-3 flex-1"
+                >
+
+                  <MessageSquare className="h-5 w-5 mt-1 text-emerald-400" />
+
+                  <p className="text-sm line-clamp-2">
+
+                    {c.title}
+
+                  </p>
+
+                </div>
+
+                <button
+                  onClick={() => deleteChat(c.id)}
+                >
+
+                  <Trash2 className="h-4 w-4 text-red-400" />
+
+                </button>
+
+              </div>
+
+            </div>
+          ))}
+
+        </div>
+
+      </div>
+
+      {/* MAIN */}
+
+      <div className="flex-1 px-4 py-6">
+
+        <div className="max-w-6xl mx-auto">
+
+          {/* HERO */}
+
+          <motion.div
+            initial={{
+              opacity: 0,
+              y: 20,
+            }}
+            animate={{
+              opacity: 1,
+              y: 0,
+            }}
+            className="bg-gradient-to-r from-emerald-500 to-green-600 rounded-[32px] p-6 mb-6"
+          >
 
             <div className="flex items-center gap-4">
 
-              <div className="h-16 w-16 rounded-3xl bg-white/15 flex items-center justify-center backdrop-blur-xl">
+              <div className="h-16 w-16 rounded-3xl bg-white/15 flex items-center justify-center">
 
                 <Sparkles className="h-8 w-8 text-white" />
 
@@ -162,15 +378,15 @@ Ask me anything 🌱`,
 
               <div>
 
-                <h1 className="text-3xl md:text-5xl font-black">
+                <h1 className="text-4xl font-black">
 
                   EcoMind AI
 
                 </h1>
 
-                <p className="text-green-50 mt-2 text-sm md:text-base">
+                <p className="text-green-100 mt-2">
 
-                  Your intelligent sustainability assistant 🌱
+                  Sustainability Assistant 🌱
 
                 </p>
 
@@ -178,129 +394,20 @@ Ask me anything 🌱`,
 
             </div>
 
-            {/* FEATURES */}
+          </motion.div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
+          {/* CHAT */}
 
-              <div className="bg-white/10 rounded-2xl p-4 backdrop-blur-xl">
-
-                <Leaf className="h-6 w-6 mb-2" />
-
-                <p className="text-sm font-semibold">
-                  Sustainability
-                </p>
-
-              </div>
-
-              <div className="bg-white/10 rounded-2xl p-4 backdrop-blur-xl">
-
-                <Recycle className="h-6 w-6 mb-2" />
-
-                <p className="text-sm font-semibold">
-                  Recycling
-                </p>
-
-              </div>
-
-              <div className="bg-white/10 rounded-2xl p-4 backdrop-blur-xl">
-
-                <Wind className="h-6 w-6 mb-2" />
-
-                <p className="text-sm font-semibold">
-                  Clean Energy
-                </p>
-
-              </div>
-
-              <div className="bg-white/10 rounded-2xl p-4 backdrop-blur-xl">
-
-                <Globe2 className="h-6 w-6 mb-2" />
-
-                <p className="text-sm font-semibold">
-                  Climate AI
-                </p>
-
-              </div>
-
-            </div>
-
-          </div>
-
-        </motion.div>
-
-        {/* MAIN CHAT */}
-
-        <div className="grid lg:grid-cols-[1fr_320px] gap-6">
-
-          {/* CHAT PANEL */}
-
-          <div className="bg-white/5 border border-white/10 rounded-[32px] overflow-hidden backdrop-blur-xl shadow-2xl">
-
-            {/* TOP */}
-
-            <div className="border-b border-white/5 px-6 py-5 flex items-center justify-between">
-
-              <div className="flex items-center gap-3">
-
-                <div className="h-12 w-12 rounded-2xl bg-emerald-500/20 flex items-center justify-center">
-
-                  <Bot className="h-6 w-6 text-emerald-400" />
-
-                </div>
-
-                <div>
-
-                  <h2 className="font-bold text-lg">
-
-                    EcoMind Chat
-
-                  </h2>
-
-                  <p className="text-xs text-green-400">
-
-                    AI Online
-                  </p>
-
-                </div>
-
-              </div>
-
-              <button
-                onClick={() => {
-
-                  setChat([
-                    {
-                      role: 'ai',
-                      text:
-                        'Chat cleared successfully 🌱',
-                    },
-                  ]);
-                }}
-                className="h-11 w-11 rounded-2xl bg-red-500/10 hover:bg-red-500/20 flex items-center justify-center transition"
-              >
-
-                <Trash2 className="h-5 w-5 text-red-400" />
-
-              </button>
-
-            </div>
+          <div className="bg-white/5 border border-white/10 rounded-[32px] overflow-hidden">
 
             {/* CHAT AREA */}
 
-            <div className="h-[65vh] overflow-y-auto px-5 py-6 space-y-5">
+            <div className="h-[70vh] overflow-y-auto px-5 py-6 space-y-5">
 
               {chat.map((c, index) => (
 
-                <motion.div
+                <div
                   key={index}
-                  initial={{
-                    opacity: 0,
-                    y: 10,
-                  }}
-                  animate={{
-                    opacity: 1,
-                    y: 0,
-                  }}
                   className={`flex ${
                     c.role === 'user'
                       ? 'justify-end'
@@ -309,12 +416,12 @@ Ask me anything 🌱`,
                 >
 
                   <div
-                    className={`max-w-[85%] rounded-3xl px-5 py-4 shadow-xl
+                    className={`max-w-[85%] rounded-3xl px-5 py-4
 
                     ${
                       c.role === 'user'
-                        ? 'bg-gradient-to-r from-emerald-500 to-green-600 text-white'
-                        : 'bg-[#101b28] border border-white/5 text-slate-200'
+                        ? 'bg-gradient-to-r from-emerald-500 to-green-600'
+                        : 'bg-[#101b28]'
                     }
                     `}
                   >
@@ -341,7 +448,7 @@ Ask me anything 🌱`,
 
                     </div>
 
-                    <p className="text-[15px] leading-7 whitespace-pre-wrap">
+                    <p className="leading-7 whitespace-pre-wrap">
 
                       {c.text}
 
@@ -349,18 +456,14 @@ Ask me anything 🌱`,
 
                   </div>
 
-                </motion.div>
+                </div>
               ))}
 
               {loading && (
 
-                <div className="flex justify-start">
+                <div className="bg-[#101b28] px-5 py-4 rounded-3xl w-fit">
 
-                  <div className="bg-[#101b28] border border-white/5 px-5 py-4 rounded-3xl text-sm text-slate-300 animate-pulse">
-
-                    🌱 EcoMind AI is thinking...
-
-                  </div>
+                  🌱 EcoMind AI is thinking...
 
                 </div>
 
@@ -372,7 +475,7 @@ Ask me anything 🌱`,
 
             {/* INPUT */}
 
-            <div className="border-t border-white/5 p-4 bg-[#0b141d]">
+            <div className="border-t border-white/10 p-4 bg-[#0b141d]">
 
               <div className="flex items-center gap-3">
 
@@ -390,116 +493,17 @@ Ask me anything 🌱`,
                       sendMessage();
                     }
                   }}
-                  className="flex-1 bg-[#111c27] border border-white/5 rounded-2xl px-5 py-4 text-sm outline-none text-white placeholder:text-slate-500 focus:border-emerald-500"
+                  className="flex-1 bg-[#111c27] rounded-2xl px-5 py-4 outline-none"
                 />
 
-                {/* MIC */}
-
                 <button
-                  className="h-14 w-14 rounded-2xl bg-white/5 hover:bg-white/10 flex items-center justify-center transition"
-                >
-
-                  <Mic className="h-5 w-5 text-emerald-400" />
-
-                </button>
-
-                {/* SEND */}
-
-                <button
-                  onClick={() =>
-                    sendMessage()
-                  }
-                  className="h-14 w-14 rounded-2xl bg-emerald-500 hover:bg-emerald-600 transition flex items-center justify-center shadow-lg"
+                  onClick={() => sendMessage()}
+                  className="h-14 w-14 rounded-2xl bg-emerald-500 flex items-center justify-center"
                 >
 
                   <Send className="h-5 w-5 text-white" />
 
                 </button>
-
-              </div>
-
-            </div>
-
-          </div>
-
-          {/* SIDEBAR */}
-
-          <div className="space-y-6">
-
-            {/* QUICK QUESTIONS */}
-
-            <div className="bg-white/5 border border-white/10 rounded-3xl p-6">
-
-              <h2 className="text-2xl font-black mb-5">
-
-                Quick Questions
-
-              </h2>
-
-              <div className="space-y-4">
-
-                {quickQuestions.map(
-                  (q, index) => (
-
-                    <button
-                      key={index}
-                      onClick={() =>
-                        sendMessage(q)
-                      }
-                      className="w-full text-left bg-black/20 hover:bg-black/30 border border-white/5 rounded-2xl p-4 transition-all"
-                    >
-
-                      <p className="text-sm font-medium leading-relaxed">
-
-                        {q}
-
-                      </p>
-
-                    </button>
-                  )
-                )}
-
-              </div>
-
-            </div>
-
-            {/* AI STATUS */}
-
-            <div className="bg-gradient-to-br from-green-500 to-emerald-600 rounded-3xl p-6 shadow-2xl">
-
-              <div className="flex items-center gap-3 mb-5">
-
-                <Sparkles className="h-6 w-6" />
-
-                <h2 className="text-2xl font-black">
-
-                  AI Features
-
-                </h2>
-
-              </div>
-
-              <div className="space-y-4 text-sm">
-
-                <div className="bg-white/10 rounded-2xl p-4">
-
-                  🌍 Climate Change Insights
-                </div>
-
-                <div className="bg-white/10 rounded-2xl p-4">
-
-                  ♻️ Recycling Recommendations
-                </div>
-
-                <div className="bg-white/10 rounded-2xl p-4">
-
-                  ⚡ Renewable Energy Guidance
-                </div>
-
-                <div className="bg-white/10 rounded-2xl p-4">
-
-                  🌱 Sustainability Education
-                </div>
 
               </div>
 

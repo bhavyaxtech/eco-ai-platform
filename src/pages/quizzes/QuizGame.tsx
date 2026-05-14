@@ -16,6 +16,9 @@ import {
   XCircle,
   Loader2,
   Sparkles,
+  Flame,
+  Leaf,
+  Droplets,
 } from 'lucide-react';
 
 import { motion } from 'framer-motion';
@@ -40,8 +43,8 @@ function QuizGame() {
   const { id } = useParams();
 
   const {
-    completeQuiz,
     user,
+    setAuth,
   } = useAuthStore();
 
   const [quiz, setQuiz] =
@@ -72,6 +75,9 @@ function QuizGame() {
 
   const [isCorrect, setIsCorrect] =
     useState<boolean | null>(null);
+
+  const [quizResult, setQuizResult] =
+    useState<any>(null);
 
   /* FETCH QUIZ */
 
@@ -114,6 +120,87 @@ function QuizGame() {
 
   }, [id]);
 
+  /* COMPLETE QUIZ */
+
+  const completeQuizBackend =
+    async (
+      finalScore: number
+    ) => {
+
+      try {
+
+        const token =
+          localStorage.getItem(
+            'eco_token'
+          );
+
+        const response =
+          await fetch(
+            'http://127.0.0.1:5000/api/quizzes/complete',
+            {
+              method: 'POST',
+
+              headers: {
+                'Content-Type':
+                  'application/json',
+
+                Authorization: `Bearer ${token}`,
+              },
+
+              body: JSON.stringify({
+                quizId: Number(id),
+                score: finalScore,
+              }),
+            }
+          );
+
+        const data =
+          await response.json();
+
+        if (!response.ok) {
+
+          throw new Error(
+            data.message
+          );
+        }
+
+        setEarnedXP(
+          data.earnedXP
+        );
+
+        setQuizResult(data);
+
+        /* UPDATE LOCAL USER */
+
+        if (user) {
+
+          const updatedUser = {
+            ...user,
+            points:
+              data.totalPoints,
+          };
+
+          localStorage.setItem(
+            'eco_user',
+            JSON.stringify(
+              updatedUser
+            )
+          );
+
+          setAuth(
+            localStorage.getItem(
+              'eco_token'
+            ) || '',
+            updatedUser
+          );
+        }
+
+      } catch (error) {
+
+        console.error(error);
+      }
+    };
+
   /* HANDLE ANSWER */
 
   const handleAnswer = (
@@ -144,7 +231,7 @@ function QuizGame() {
       setScore(updatedScore);
     }
 
-    setTimeout(() => {
+    setTimeout(async () => {
 
       setSelected('');
 
@@ -161,18 +248,9 @@ function QuizGame() {
 
       } else {
 
-        const xp =
-          updatedScore * 50;
-
-        setEarnedXP(xp);
-
-        if (id) {
-
-          completeQuiz(
-            Number(id),
-            xp
-          );
-        }
+        await completeQuizBackend(
+          updatedScore
+        );
 
         setShowResult(true);
       }
@@ -203,9 +281,9 @@ function QuizGame() {
 
     return (
 
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-[#071018]">
 
-        <div className="flex items-center gap-4 text-green-500 text-2xl font-bold">
+        <div className="flex items-center gap-4 text-green-400 text-2xl font-bold">
 
           <Loader2 className="animate-spin h-8 w-8" />
 
@@ -223,7 +301,7 @@ function QuizGame() {
 
     return (
 
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-[#071018]">
 
         <div className="bg-red-500/10 border border-red-500/20 px-10 py-8 rounded-3xl text-center">
 
@@ -257,100 +335,160 @@ function QuizGame() {
 
     return (
 
-      <div className="max-w-4xl mx-auto px-6 py-16">
+      <div className="min-h-screen bg-[#071018] px-6 py-16">
 
-        <motion.div
-          initial={{
-            opacity: 0,
-            y: 30,
-          }}
-          animate={{
-            opacity: 1,
-            y: 0,
-          }}
-          className="bg-[#111827] border border-white/10 rounded-[32px] p-12 text-center shadow-[0_20px_80px_rgba(0,0,0,0.5)]"
-        >
+        <div className="max-w-5xl mx-auto">
 
-          <div className="flex justify-center mb-8">
+          <motion.div
+            initial={{
+              opacity: 0,
+              y: 30,
+            }}
+            animate={{
+              opacity: 1,
+              y: 0,
+            }}
+            className="bg-[#111827] border border-white/10 rounded-[32px] p-10 text-center shadow-[0_20px_80px_rgba(0,0,0,0.5)]"
+          >
 
-            <div className="bg-green-500/20 p-6 rounded-full">
+            <div className="flex justify-center mb-8">
 
-              <Trophy className="h-16 w-16 text-green-400" />
+              <div className="bg-green-500/20 p-6 rounded-full">
 
-            </div>
+                <Trophy className="h-16 w-16 text-green-400" />
 
-          </div>
-
-          <h1 className="text-5xl font-black text-white">
-
-            Quiz Completed 🎉
-
-          </h1>
-
-          <div className="mt-8 text-7xl font-black text-green-400">
-
-            {score}/{quiz.questions.length}
-
-          </div>
-
-          <div className="mt-3 text-2xl text-gray-300">
-
-            {percentage}% Score
-          </div>
-
-          <div className="mt-8 bg-green-500/10 border border-green-500/20 rounded-3xl p-6 inline-block">
-
-            <div className="text-5xl font-black text-green-400">
-
-              +{earnedXP} XP
+              </div>
 
             </div>
 
-            <p className="text-gray-400 mt-2">
+            <h1 className="text-4xl font-black text-white">
 
-              Great sustainability learning progress 🌱
+              Quiz Completed 🎉
 
-            </p>
+            </h1>
 
-          </div>
+            <div className="mt-6 text-6xl font-black text-green-400">
 
-          <div className="mt-6 text-xl text-gray-300">
+              {score}/{quiz.questions.length}
 
-            Current Points:
-            {' '}
-            <span className="text-green-400 font-bold">
-              {user?.points}
-            </span>
+            </div>
 
-          </div>
+            <div className="mt-3 text-xl text-gray-300">
 
-          <div className="flex justify-center gap-5 mt-12 flex-wrap">
+              {percentage}% Accuracy
+            </div>
 
-            <button
-              onClick={restartQuiz}
-              className="flex items-center gap-3 bg-green-500 hover:bg-green-600 text-white px-8 py-4 rounded-2xl font-bold transition"
-            >
+            <div className="mt-8 grid md:grid-cols-4 gap-5">
 
-              <RotateCcw className="h-5 w-5" />
+              <div className="bg-green-500/10 border border-green-500/20 rounded-3xl p-6">
 
-              Restart Quiz
+                <Sparkles className="mx-auto text-green-400 mb-3" />
 
-            </button>
+                <h2 className="text-4xl font-black text-green-400">
 
-            <Link
-              to="/quizzes"
-              className="flex items-center gap-3 bg-white/10 hover:bg-white/20 border border-white/10 text-white px-8 py-4 rounded-2xl font-bold transition"
-            >
+                  +{earnedXP}
 
-              <Home className="h-5 w-5" />
+                </h2>
 
-              Back To Quizzes
+                <p className="text-gray-400 mt-2">
 
-            </Link>
+                  XP Earned
+                </p>
 
-          </div>
+              </div>
 
-        </motion.div>
+              <div className="bg-white/5 rounded-3xl p-6">
+
+                <Flame className="mx-auto text-orange-400 mb-3" />
+
+                <h2 className="text-4xl font-black text-white">
+
+                  {quizResult?.streak || 1}
+
+                </h2>
+
+                <p className="text-gray-400 mt-2">
+
+                  Day Streak
+                </p>
+
+              </div>
+
+              <div className="bg-white/5 rounded-3xl p-6">
+
+                <Leaf className="mx-auto text-green-400 mb-3" />
+
+                <h2 className="text-4xl font-black text-white">
+
+                  {quizResult?.environmentalImpact?.carbonSaved || 0}
+
+                </h2>
+
+                <p className="text-gray-400 mt-2">
+
+                  CO₂ Saved
+                </p>
+
+              </div>
+
+              <div className="bg-white/5 rounded-3xl p-6">
+
+                <Droplets className="mx-auto text-cyan-400 mb-3" />
+
+                <h2 className="text-4xl font-black text-white">
+
+                  {quizResult?.environmentalImpact?.waterSaved || 0}
+
+                </h2>
+
+                <p className="text-gray-400 mt-2">
+
+                  Water Saved
+                </p>
+
+              </div>
+
+            </div>
+
+            <div className="mt-8 text-xl text-gray-300">
+
+              Current Points:
+              {' '}
+              <span className="text-green-400 font-bold">
+                {quizResult?.totalPoints}
+              </span>
+
+            </div>
+
+            <div className="flex justify-center gap-5 mt-12 flex-wrap">
+
+              <button
+                onClick={restartQuiz}
+                className="flex items-center gap-3 bg-green-500 hover:bg-green-600 text-white px-8 py-4 rounded-2xl font-bold transition"
+              >
+
+                <RotateCcw className="h-5 w-5" />
+
+                Restart Quiz
+
+              </button>
+
+              <Link
+                to="/quizzes"
+                className="flex items-center gap-3 bg-white/10 hover:bg-white/20 border border-white/10 text-white px-8 py-4 rounded-2xl font-bold transition"
+              >
+
+                <Home className="h-5 w-5" />
+
+                Back To Quizzes
+
+              </Link>
+
+            </div>
+
+          </motion.div>
+
+        </div>
 
       </div>
     );
@@ -363,186 +501,144 @@ function QuizGame() {
 
   return (
 
-    <div className="max-w-5xl mx-auto px-6 py-10">
+    <div className="min-h-screen bg-[#071018] px-6 py-10">
 
-      <div className="bg-[#111827] border border-white/10 rounded-[32px] p-10 shadow-[0_20px_80px_rgba(0,0,0,0.4)]">
+      <div className="max-w-5xl mx-auto">
 
-        {/* HEADER */}
+        <div className="bg-[#111827] border border-white/10 rounded-[32px] p-10 shadow-[0_20px_80px_rgba(0,0,0,0.4)]">
 
-        <div className="flex justify-between items-center flex-wrap gap-5 mb-10">
+          <div className="flex justify-between items-center flex-wrap gap-5 mb-10">
 
-          <div>
+            <div>
 
-            <h1 className="text-4xl font-black text-white">
+              <h1 className="text-3xl font-black text-white">
 
-              {quiz.title}
+                {quiz.title}
 
-            </h1>
+              </h1>
 
-            <p className="text-gray-400 mt-2">
+              <p className="text-gray-400 mt-2">
 
-              Sustainability Quiz Challenge 🌱
+                Sustainability Quiz 🌱
 
-            </p>
-
-          </div>
-
-          <div className="bg-green-500/10 border border-green-500/20 px-5 py-3 rounded-2xl">
-
-            <div className="text-sm text-gray-400">
-              Score
-            </div>
-
-            <div className="text-3xl font-black text-green-400">
-
-              {score * 50}
+              </p>
 
             </div>
 
-          </div>
+            <div className="bg-green-500/10 border border-green-500/20 px-5 py-3 rounded-2xl">
 
-        </div>
+              <div className="text-sm text-gray-400">
+                Score
+              </div>
 
-        {/* PROGRESS */}
+              <div className="text-3xl font-black text-green-400">
 
-        <div className="mb-10">
+                {score * 50}
 
-          <div className="flex justify-between text-gray-300 mb-3">
+              </div>
 
-            <span>
-              Question {currentQuestion + 1}
-            </span>
-
-            <span>
-              {quiz.questions.length}
-            </span>
+            </div>
 
           </div>
 
-          <div className="w-full h-3 bg-white/10 rounded-full overflow-hidden">
+          <div className="mb-10">
 
-            <motion.div
-              initial={{
-                width: 0,
-              }}
-              animate={{
-                width: `${((currentQuestion + 1) /
-                  quiz.questions.length) *
-                  100}%`,
-              }}
-              className="h-3 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full"
-            />
+            <div className="flex justify-between text-gray-300 mb-3">
 
-          </div>
+              <span>
+                Question {currentQuestion + 1}
+              </span>
 
-        </div>
+              <span>
+                {quiz.questions.length}
+              </span>
 
-        {/* QUESTION */}
+            </div>
 
-        <div className="bg-white/[0.03] border border-white/10 rounded-3xl p-8 mb-10">
+            <div className="w-full h-3 bg-white/10 rounded-full overflow-hidden">
 
-          <h2 className="text-3xl font-bold text-white leading-relaxed">
-
-            {question.question}
-
-          </h2>
-
-        </div>
-
-        {/* OPTIONS */}
-
-        <div className="space-y-5">
-
-          {question.options.map(
-            (option, index) => (
-
-              <motion.button
-                whileHover={{
-                  scale: 1.01,
+              <motion.div
+                initial={{
+                  width: 0,
                 }}
-                key={index}
-                onClick={() =>
-                  handleAnswer(option)
-                }
-                disabled={!!selected}
-                className={`w-full p-6 rounded-2xl border text-left text-lg font-semibold transition-all duration-300
-
-                ${
-                  selected === option
-                    ? option ===
-                      question.answer
-                      ? 'bg-green-500/20 border-green-500 text-white'
-                      : 'bg-red-500/20 border-red-500 text-white'
-                    : 'bg-white/[0.03] border-white/10 text-gray-200 hover:border-green-400 hover:bg-green-500/10'
-                }
-                `}
-              >
-
-                <div className="flex justify-between items-center">
-
-                  <span>
-                    {option}
-                  </span>
-
-                  {selected === option && (
-
-                    option ===
-                    question.answer ? (
-
-                      <CheckCircle2 className="text-green-400" />
-
-                    ) : (
-
-                      <XCircle className="text-red-400" />
-
-                    )
-                  )}
-
-                </div>
-
-              </motion.button>
-            )
-          )}
-
-        </div>
-
-        {/* FACT */}
-
-        {selected && (
-
-          <motion.div
-            initial={{
-              opacity: 0,
-              y: 20,
-            }}
-            animate={{
-              opacity: 1,
-              y: 0,
-            }}
-            className="mt-8 bg-green-500/10 border border-green-500/20 rounded-3xl p-6"
-          >
-
-            <div className="flex items-center gap-3 mb-4">
-
-              <Sparkles className="text-green-400" />
-
-              <h3 className="font-bold text-green-400 text-2xl">
-
-                Eco Fact 🌍
-
-              </h3>
+                animate={{
+                  width: `${((currentQuestion + 1) /
+                    quiz.questions.length) *
+                    100}%`,
+                }}
+                className="h-3 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full"
+              />
 
             </div>
 
-            <p className="text-gray-300 text-lg leading-relaxed">
+          </div>
 
-              {question.fact}
+          <div className="bg-white/[0.03] border border-white/10 rounded-3xl p-8 mb-10">
 
-            </p>
+            <h2 className="text-2xl font-bold text-white leading-relaxed">
 
-          </motion.div>
+              {question.question}
 
-        )}
+            </h2>
+
+          </div>
+
+          <div className="space-y-5">
+
+            {question.options.map(
+              (option, index) => (
+
+                <motion.button
+                  whileHover={{
+                    scale: 1.01,
+                  }}
+                  key={index}
+                  onClick={() =>
+                    handleAnswer(option)
+                  }
+                  disabled={!!selected}
+                  className={`w-full p-5 rounded-2xl border text-left text-lg font-semibold transition-all duration-300
+
+                  ${
+                    selected === option
+                      ? option ===
+                        question.answer
+                        ? 'bg-green-500/20 border-green-500 text-white'
+                        : 'bg-red-500/20 border-red-500 text-white'
+                      : 'bg-white/[0.03] border-white/10 text-gray-200 hover:border-green-400 hover:bg-green-500/10'
+                  }
+                  `}
+                >
+
+                  <div className="flex justify-between items-center">
+
+                    <span>
+                      {option}
+                    </span>
+
+                    {selected === option && (
+
+                      option ===
+                      question.answer ? (
+
+                        <CheckCircle2 className="text-green-400" />
+
+                      ) : (
+
+                        <XCircle className="text-red-400" />
+
+                      )
+                    )}
+
+                  </div>
+
+                </motion.button>
+              )
+            )}
+
+          </div>
+
+        </div>
 
       </div>
 

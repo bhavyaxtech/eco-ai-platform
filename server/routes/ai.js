@@ -2,157 +2,275 @@ import express from 'express';
 import dotenv from 'dotenv';
 import axios from 'axios';
 
+import Chat from '../models/Chat.js';
+
 dotenv.config();
 
 const router = express.Router();
 
-/* =========================
-   AI ASSISTANT CHAT
-========================= */
+/* ======================================================
+   CREATE / CONTINUE CHAT
+====================================================== */
 
 router.post('/ask', async (req, res) => {
-
   try {
-
-    const { question } = req.body;
+    const {
+      question,
+      userId,
+      chatId,
+    } = req.body;
 
     if (!question) {
-
       return res.status(400).json({
-        error: 'Question is required',
+        success: false,
+        error: 'Question required',
       });
     }
 
-    console.log('QUESTION:', question);
+    let chat;
+
+    /* =========================================
+       EXISTING CHAT
+    ========================================= */
+
+    if (chatId) {
+      chat = await Chat.findById(chatId);
+    }
+
+    /* =========================================
+       NEW CHAT
+    ========================================= */
+
+    if (!chat) {
+      chat = await Chat.create({
+        userId,
+
+        title:
+          question.slice(0, 40) + '...',
+
+        messages: [],
+      });
+    }
+
+    /* SAVE USER MESSAGE */
+
+    chat.messages.push({
+      role: 'user',
+      content: question,
+    });
+
+    /* =========================================
+       AI REQUEST
+    ========================================= */
 
     const response = await axios.post(
-
       'https://openrouter.ai/api/v1/chat/completions',
 
       {
-        model: 'meta-llama/llama-3.1-8b-instruct',
+        model:
+          'meta-llama/llama-3.1-8b-instruct',
 
         messages: [
-
           {
             role: 'system',
 
-            content:
-              `
+            content: `
 You are EcoLearn AI.
 
+You are a futuristic sustainability AI assistant.
+
 You help users with:
-- Sustainability
-- Climate change
-- Green energy
-- Recycling
-- Carbon footprint
-- Environmental awareness
-- Eco-friendly lifestyle
-- Waste management
-- AI sustainability solutions
+- climate change
+- sustainability
+- recycling
+- green energy
+- eco living
+- carbon footprint
+- environmental education
 
-Always give clean professional answers.
-              `,
+Your style:
+- smart
+- modern
+- professional
+- startup-grade
+- motivational
+            `,
           },
 
-          {
-            role: 'user',
-            content: question,
-          },
+          ...chat.messages.map((m) => ({
+            role: m.role,
+            content: m.content,
+          })),
         ],
 
         temperature: 0.7,
-        max_tokens: 1000,
+
+        max_tokens: 1200,
       },
 
       {
         headers: {
+          Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
 
-          Authorization:
-            `Bearer ${process.env.OPENROUTER_API_KEY}`,
+          'HTTP-Referer':
+            'http://localhost:5173',
 
-          'HTTP-Referer': 'http://localhost:5173',
+          'X-Title':
+            'EcoLearn AI',
 
-          'X-Title': 'EcoLearn AI',
-
-          'Content-Type': 'application/json',
+          'Content-Type':
+            'application/json',
         },
       }
     );
 
-    console.log('FULL RESPONSE:', response.data);
+    const aiReply =
+      response.data.choices?.[0]
+        ?.message?.content ||
+      'No response';
 
-    const answer =
-      response.data.choices?.[0]?.message?.content;
+    /* SAVE AI MESSAGE */
+
+    chat.messages.push({
+      role: 'assistant',
+      content: aiReply,
+    });
+
+    await chat.save();
+
+    /* RESPONSE */
 
     res.json({
       success: true,
-      answer,
+
+      answer: aiReply,
+
+      chatId: chat._id,
+
+      messages: chat.messages,
     });
-
   } catch (error) {
-
     console.log(
       'AI ERROR:',
-      error.response?.data || error.message
+      error.response?.data ||
+        error.message
     );
 
     res.status(500).json({
-
       success: false,
 
       error:
-        error.response?.data?.error?.message ||
-        error.message ||
-        'AI request failed',
+        error.response?.data?.error
+          ?.message ||
+        error.message,
     });
   }
 });
 
-/* =========================
-   AI REPORT GENERATOR
-========================= */
+/* ======================================================
+   GET ALL CHATS
+====================================================== */
 
-router.post('/report', async (req, res) => {
-
+router.get('/history/:userId', async (req, res) => {
   try {
+    const chats = await Chat.find({
+      userId: req.params.userId,
+    }).sort({
+      updatedAt: -1,
+    });
 
-    const { topic } = req.body;
+    res.json({
+      success: true,
+      chats,
+    });
+  } catch (error) {
+    console.log(error);
 
-    if (!topic) {
+    res.status(500).json({
+      success: false,
+    });
+  }
+});
 
-      return res.status(400).json({
-        error: 'Topic is required',
+/* ======================================================
+   GET SINGLE CHAT
+====================================================== */
+
+router.get('/chat/:chatId', async (req, res) => {
+  try {
+    const chat = await Chat.findById(
+      req.params.chatId
+    );
+
+    res.json({
+      success: true,
+      chat,
+    });
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      success: false,
+    });
+  }
+});
+
+/* ======================================================
+   DELETE CHAT
+====================================================== */
+
+router.delete(
+  '/delete/:chatId',
+  async (req, res) => {
+    try {
+      await Chat.findByIdAndDelete(
+        req.params.chatId
+      );
+
+      res.json({
+        success: true,
+        message:
+          'Chat deleted successfully',
+      });
+    } catch (error) {
+      console.log(error);
+
+      res.status(500).json({
+        success: false,
       });
     }
+  }
+);
+
+/* ======================================================
+   AI REPORT GENERATOR
+====================================================== */
+
+router.post('/report', async (req, res) => {
+  try {
+    const { topic } = req.body;
 
     const prompt = `
-Generate a professional sustainability report about:
+Generate a professional sustainability report on:
 
 ${topic}
 
 Include:
-- Current problem
-- Environmental impact
-- AI-based solutions
-- Action steps
-- Sustainability benefits
-
-Make the report professional and detailed.
+- Environmental problem
+- Global impact
+- AI solutions
+- Action plan
+- Future sustainability benefits
 `;
 
-    console.log('REPORT TOPIC:', topic);
-
     const response = await axios.post(
-
       'https://openrouter.ai/api/v1/chat/completions',
 
       {
-        model: 'meta-llama/llama-3.1-8b-instruct',
+        model:
+          'meta-llama/llama-3.1-8b-instruct',
 
         messages: [
-
           {
             role: 'system',
 
@@ -167,46 +285,40 @@ Make the report professional and detailed.
         ],
 
         temperature: 0.7,
+
         max_tokens: 2000,
       },
 
       {
         headers: {
+          Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
 
-          Authorization:
-            `Bearer ${process.env.OPENROUTER_API_KEY}`,
+          'HTTP-Referer':
+            'http://localhost:5173',
 
-          'HTTP-Referer': 'http://localhost:5173',
+          'X-Title':
+            'EcoLearn AI',
 
-          'X-Title': 'EcoLearn AI',
-
-          'Content-Type': 'application/json',
+          'Content-Type':
+            'application/json',
         },
       }
     );
 
     const report =
-      response.data.choices?.[0]?.message?.content;
+      response.data.choices?.[0]
+        ?.message?.content;
 
     res.json({
       success: true,
       report,
     });
-
   } catch (error) {
-
-    console.log(
-      'REPORT ERROR:',
-      error.response?.data || error.message
-    );
+    console.log(error);
 
     res.status(500).json({
-
       success: false,
-
-      error:
-        error.response?.data?.error?.message ||
-        error.message,
+      error: 'Report failed',
     });
   }
 });

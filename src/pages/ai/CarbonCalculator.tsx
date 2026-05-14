@@ -15,6 +15,18 @@ import {
 
 import { motion } from 'framer-motion';
 
+import {
+  PieChart,
+  Pie,
+  Cell,
+  Tooltip,
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+} from 'recharts';
+
 function CarbonCalculator() {
 
   const [electricity, setElectricity] = useState('');
@@ -66,7 +78,7 @@ function CarbonCalculator() {
         color = 'text-green-400';
 
         aiAdvice =
-          'Amazing job! Your lifestyle is eco-friendly and sustainable. Keep maintaining these green habits.';
+          'Amazing job! Your lifestyle is eco-friendly and sustainable.';
 
       } else if (ecoScore > 60) {
 
@@ -75,7 +87,7 @@ function CarbonCalculator() {
         color = 'text-emerald-400';
 
         aiAdvice =
-          'You are doing well. Reducing electricity usage and using public transport can improve your score further.';
+          'You are doing well. Reducing electricity usage and public transport can improve your score further.';
 
       } else if (ecoScore > 40) {
 
@@ -84,7 +96,7 @@ function CarbonCalculator() {
         color = 'text-yellow-400';
 
         aiAdvice =
-          'Your carbon footprint is moderate. Consider reducing meat consumption and energy waste.';
+          'Your carbon footprint is moderate. Reduce meat consumption and energy waste.';
 
       } else {
 
@@ -93,8 +105,7 @@ function CarbonCalculator() {
         color = 'text-red-400';
 
         aiAdvice =
-          'Your environmental impact is high. AI recommends reducing fossil fuel usage, limiting waste, and adopting renewable energy.';
-
+          'Your environmental impact is high. Use renewable energy and reduce fossil fuel usage.';
       }
 
       setResult({
@@ -112,6 +123,29 @@ function CarbonCalculator() {
 
     }, 1500);
   };
+
+  const chartData = result
+    ? [
+        {
+          name: 'Electricity',
+          value: result.electricityEmission,
+        },
+        {
+          name: 'Transport',
+          value: result.transportEmission,
+        },
+        {
+          name: 'Food',
+          value: result.meatEmission,
+        },
+      ]
+    : [];
+
+  const COLORS = [
+    '#22c55e',
+    '#3b82f6',
+    '#ef4444',
+  ];
 
   return (
 
@@ -143,15 +177,15 @@ function CarbonCalculator() {
 
             <div>
 
-              <h1 className="text-3xl md:text-5xl font-black leading-tight">
+              <h1 className="text-3xl md:text-5xl font-black">
 
                 AI Carbon Calculator
 
               </h1>
 
-              <p className="text-gray-400 mt-2 text-sm md:text-base">
+              <p className="text-gray-400 mt-2">
 
-                Analyze your environmental impact with AI-powered sustainability insights.
+                Analyze your environmental impact with AI-powered insights.
 
               </p>
 
@@ -169,27 +203,13 @@ function CarbonCalculator() {
 
               <div className="flex items-center gap-3 mb-5">
 
-                <div className="w-12 h-12 rounded-2xl bg-yellow-500/15 flex items-center justify-center">
+                <Zap className="text-yellow-400 h-6 w-6" />
 
-                  <Zap className="text-yellow-400 h-6 w-6" />
+                <h2 className="font-bold text-lg">
 
-                </div>
+                  Electricity
 
-                <div>
-
-                  <h2 className="font-bold text-lg">
-
-                    Electricity
-
-                  </h2>
-
-                  <p className="text-gray-400 text-sm">
-
-                    Monthly usage
-
-                  </p>
-
-                </div>
+                </h2>
 
               </div>
 
@@ -199,8 +219,8 @@ function CarbonCalculator() {
                 onChange={(e) =>
                   setElectricity(e.target.value)
                 }
-                placeholder="e.g. 120"
-                className="w-full p-4 rounded-2xl bg-[#0f172a] border border-white/10 text-white outline-none focus:border-green-500"
+                placeholder="Monthly electricity usage"
+                className="w-full p-4 rounded-2xl bg-[#0f172a] border border-white/10 outline-none"
               />
 
             </div>
@@ -211,27 +231,13 @@ function CarbonCalculator() {
 
               <div className="flex items-center gap-3 mb-5">
 
-                <div className="w-12 h-12 rounded-2xl bg-blue-500/15 flex items-center justify-center">
+                <Car className="text-blue-400 h-6 w-6" />
 
-                  <Car className="text-blue-400 h-6 w-6" />
+                <h2 className="font-bold text-lg">
 
-                </div>
+                  Transport
 
-                <div>
-
-                  <h2 className="font-bold text-lg">
-
-                    Transport
-
-                  </h2>
-
-                  <p className="text-gray-400 text-sm">
-
-                    Distance travelled
-
-                  </p>
-
-                </div>
+                </h2>
 
               </div>
 
@@ -241,8 +247,8 @@ function CarbonCalculator() {
                 onChange={(e) =>
                   setTransport(e.target.value)
                 }
-                placeholder="e.g. 50"
-                className="w-full p-4 rounded-2xl bg-[#0f172a] border border-white/10 text-white outline-none focus:border-green-500"
+                placeholder="Distance travelled"
+                className="w-full p-4 rounded-2xl bg-[#0f172a] border border-white/10 outline-none"
               />
 
             </div>
@@ -253,27 +259,13 @@ function CarbonCalculator() {
 
               <div className="flex items-center gap-3 mb-5">
 
-                <div className="w-12 h-12 rounded-2xl bg-red-500/15 flex items-center justify-center">
+                <Beef className="text-red-400 h-6 w-6" />
 
-                  <Beef className="text-red-400 h-6 w-6" />
+                <h2 className="font-bold text-lg">
 
-                </div>
+                  Meat Consumption
 
-                <div>
-
-                  <h2 className="font-bold text-lg">
-
-                    Meat Consumption
-
-                  </h2>
-
-                  <p className="text-gray-400 text-sm">
-
-                    Meals per week
-
-                  </p>
-
-                </div>
+                </h2>
 
               </div>
 
@@ -283,8 +275,8 @@ function CarbonCalculator() {
                 onChange={(e) =>
                   setMeat(e.target.value)
                 }
-                placeholder="e.g. 7"
-                className="w-full p-4 rounded-2xl bg-[#0f172a] border border-white/10 text-white outline-none focus:border-green-500"
+                placeholder="Meals per week"
+                className="w-full p-4 rounded-2xl bg-[#0f172a] border border-white/10 outline-none"
               />
 
             </div>
@@ -340,21 +332,9 @@ function CarbonCalculator() {
 
             <div className="grid md:grid-cols-3 gap-6">
 
-              {/* EMISSION */}
-
               <div className="bg-white/5 border border-white/10 rounded-3xl p-8">
 
-                <div className="flex items-center gap-3 mb-5">
-
-                  <TrendingDown className="text-red-400 h-7 w-7" />
-
-                  <h2 className="text-lg font-bold text-gray-300">
-
-                    CO₂ Emission
-
-                  </h2>
-
-                </div>
+                <TrendingDown className="text-red-400 h-8 w-8 mb-4" />
 
                 <div className="text-5xl font-black text-red-400">
 
@@ -364,27 +344,15 @@ function CarbonCalculator() {
 
                 <p className="text-gray-400 mt-2">
 
-                  Estimated carbon output
+                  CO₂ Emission
 
                 </p>
 
               </div>
 
-              {/* SCORE */}
-
               <div className="bg-white/5 border border-white/10 rounded-3xl p-8">
 
-                <div className="flex items-center gap-3 mb-5">
-
-                  <Award className="text-green-400 h-7 w-7" />
-
-                  <h2 className="text-lg font-bold text-gray-300">
-
-                    Eco Score
-
-                  </h2>
-
-                </div>
+                <Award className="text-green-400 h-8 w-8 mb-4" />
 
                 <div className="text-5xl font-black text-green-400">
 
@@ -394,27 +362,15 @@ function CarbonCalculator() {
 
                 <p className="text-gray-400 mt-2">
 
-                  Sustainability rating
+                  Eco Score
 
                 </p>
 
               </div>
 
-              {/* LEVEL */}
-
               <div className="bg-white/5 border border-white/10 rounded-3xl p-8">
 
-                <div className="flex items-center gap-3 mb-5">
-
-                  <BarChart3 className="text-blue-400 h-7 w-7" />
-
-                  <h2 className="text-lg font-bold text-gray-300">
-
-                    AI Result
-
-                  </h2>
-
-                </div>
+                <BarChart3 className="text-blue-400 h-8 w-8 mb-4" />
 
                 <div className={`text-3xl font-black ${result.color}`}>
 
@@ -424,7 +380,7 @@ function CarbonCalculator() {
 
                 <p className="text-gray-400 mt-2">
 
-                  Environmental performance
+                  AI Analysis
 
                 </p>
 
@@ -432,142 +388,136 @@ function CarbonCalculator() {
 
             </div>
 
-            {/* AI ANALYSIS */}
+            {/* CHARTS */}
 
-            <div className="mt-8 grid lg:grid-cols-[1fr_320px] gap-6">
+            <div className="grid lg:grid-cols-2 gap-6 mt-8">
 
-              {/* LEFT */}
+              {/* PIE */}
 
-              <div className="bg-white/5 border border-white/10 rounded-3xl p-8">
+              <div className="bg-white/5 border border-white/10 rounded-3xl p-6">
 
-                <div className="flex items-center gap-3 mb-6">
+                <h2 className="text-2xl font-black mb-6">
 
-                  <Sparkles className="text-green-400 h-7 w-7" />
+                  Emission Breakdown
 
-                  <h2 className="text-3xl font-black">
+                </h2>
 
-                    AI Sustainability Analysis
+                <div className="h-[300px]">
 
-                  </h2>
+                  <ResponsiveContainer width="100%" height="100%">
 
-                </div>
+                    <PieChart>
 
-                <p className="text-gray-300 leading-relaxed text-lg">
+                      <Pie
+                        data={chartData}
+                        dataKey="value"
+                        outerRadius={100}
+                        label
+                      >
 
-                  {result.aiAdvice}
-                </p>
+                        {chartData.map((entry, index) => (
 
-                <div className="mt-8 space-y-5">
+                          <Cell
+                            key={index}
+                            fill={COLORS[index % COLORS.length]}
+                          />
 
-                  <div className="bg-black/20 rounded-2xl p-5 flex items-center justify-between">
+                        ))}
 
-                    <div className="flex items-center gap-3">
+                      </Pie>
 
-                      <Zap className="text-yellow-400 h-5 w-5" />
+                      <Tooltip />
 
-                      <span>Electricity Emission</span>
+                    </PieChart>
 
-                    </div>
-
-                    <span className="font-bold text-yellow-400">
-
-                      {result.electricityEmission.toFixed(1)}
-                    </span>
-
-                  </div>
-
-                  <div className="bg-black/20 rounded-2xl p-5 flex items-center justify-between">
-
-                    <div className="flex items-center gap-3">
-
-                      <Car className="text-blue-400 h-5 w-5" />
-
-                      <span>Transport Emission</span>
-
-                    </div>
-
-                    <span className="font-bold text-blue-400">
-
-                      {result.transportEmission.toFixed(1)}
-                    </span>
-
-                  </div>
-
-                  <div className="bg-black/20 rounded-2xl p-5 flex items-center justify-between">
-
-                    <div className="flex items-center gap-3">
-
-                      <Beef className="text-red-400 h-5 w-5" />
-
-                      <span>Food Emission</span>
-
-                    </div>
-
-                    <span className="font-bold text-red-400">
-
-                      {result.meatEmission.toFixed(1)}
-                    </span>
-
-                  </div>
+                  </ResponsiveContainer>
 
                 </div>
 
               </div>
 
-              {/* RIGHT */}
+              {/* BAR */}
 
-              <div className="bg-gradient-to-br from-green-500 to-emerald-600 rounded-3xl p-8 text-white shadow-2xl">
+              <div className="bg-white/5 border border-white/10 rounded-3xl p-6">
 
-                <div className="flex items-center gap-3 mb-5">
+                <h2 className="text-2xl font-black mb-6">
 
-                  <CheckCircle2 className="h-7 w-7" />
+                  Carbon Sources
 
-                  <h2 className="text-2xl font-black">
+                </h2>
 
-                    AI Recommendations
+                <div className="h-[300px]">
 
-                  </h2>
+                  <ResponsiveContainer width="100%" height="100%">
 
-                </div>
+                    <BarChart data={chartData}>
 
-                <div className="space-y-4 text-sm md:text-base">
+                      <XAxis dataKey="name" />
 
-                  <div className="bg-white/10 rounded-2xl p-4">
-                    Use renewable energy sources
-                  </div>
+                      <YAxis />
 
-                  <div className="bg-white/10 rounded-2xl p-4">
-                    Reduce private vehicle usage
-                  </div>
+                      <Tooltip />
 
-                  <div className="bg-white/10 rounded-2xl p-4">
-                    Eat more plant-based meals
-                  </div>
+                      <Bar
+                        dataKey="value"
+                        fill="#22c55e"
+                      />
 
-                  <div className="bg-white/10 rounded-2xl p-4">
-                    Practice recycling & conservation
-                  </div>
+                    </BarChart>
+
+                  </ResponsiveContainer>
 
                 </div>
 
-                <div className="mt-8 bg-black/20 rounded-2xl p-5">
+              </div>
 
-                  <div className="flex items-center gap-3 mb-3">
+            </div>
 
-                    <AlertTriangle className="h-5 w-5" />
+            {/* AI SECTION */}
 
-                    <span className="font-bold">
+            <div className="mt-8 bg-gradient-to-r from-green-500 to-emerald-600 rounded-3xl p-8">
 
-                      AI Insight
-                    </span>
+              <div className="flex items-center gap-3 mb-5">
 
-                  </div>
+                <Sparkles className="h-7 w-7" />
 
-                  <p className="text-sm leading-relaxed text-green-50">
+                <h2 className="text-3xl font-black">
 
-                    Small lifestyle changes can significantly reduce long-term environmental impact and improve sustainability scores.
+                  AI Sustainability Analysis
 
-                  </p>
+                </h2>
+
+              </div>
+
+              <p className="text-lg leading-relaxed">
+
+                {result.aiAdvice}
+
+              </p>
+
+              <div className="mt-8 grid md:grid-cols-2 gap-4">
+
+                <div className="bg-white/10 rounded-2xl p-4">
+
+                  ✅ Use renewable energy
+
+                </div>
+
+                <div className="bg-white/10 rounded-2xl p-4">
+
+                  ✅ Reduce private vehicle usage
+
+                </div>
+
+                <div className="bg-white/10 rounded-2xl p-4">
+
+                  ✅ Eat more plant-based meals
+
+                </div>
+
+                <div className="bg-white/10 rounded-2xl p-4">
+
+                  ✅ Practice recycling
 
                 </div>
 
