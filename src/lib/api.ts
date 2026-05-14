@@ -1,32 +1,22 @@
 import axios from 'axios';
 
-/* =========================
-   API BASE
-========================= */
+/* API */
 
 const API = axios.create({
   baseURL: 'http://127.0.0.1:5000/api',
 });
 
-/* =========================
-   TYPES
-========================= */
+/* TYPES */
 
 interface User {
-  _id: string;
-
+  id: number;
   username: string;
-
   email: string;
-
   role?: string;
-
   points: number;
 }
 
-/* =========================
-   AUTH API
-========================= */
+/* AUTH API */
 
 export const auth = {
 
@@ -40,11 +30,13 @@ export const auth = {
     user: User;
   }> => {
 
-    const response =
-      await API.post('/auth/login', {
+    const response = await API.post(
+      '/auth/login',
+      {
         email,
         password,
-      });
+      }
+    );
 
     return response.data;
   },
@@ -60,12 +52,14 @@ export const auth = {
     user: User;
   }> => {
 
-    const response =
-      await API.post('/auth/register', {
+    const response = await API.post(
+      '/auth/register',
+      {
         username,
         email,
         password,
-      });
+      }
+    );
 
     return response.data;
   },

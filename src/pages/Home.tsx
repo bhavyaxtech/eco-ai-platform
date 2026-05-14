@@ -11,6 +11,11 @@ import {
   Zap,
   Trophy,
   Brain,
+  Mic,
+  ShieldCheck,
+  BarChart3,
+  MessageSquare,
+  Cpu,
 } from 'lucide-react';
 
 import { motion } from 'framer-motion';
@@ -21,88 +26,82 @@ function Home() {
 
     {
       icon: <Bot className="h-8 w-8" />,
-      title: 'AI Assistant',
-      desc: 'Smart sustainability guidance powered by Gemini AI.',
-    },
-
-    {
-      icon: <Leaf className="h-8 w-8" />,
-      title: 'Eco Missions',
-      desc: 'Complete daily sustainability challenges.',
+      title: 'AI Support Agent',
+      desc: '24/7 intelligent AI customer support assistant.',
     },
 
     {
       icon: <Brain className="h-8 w-8" />,
-      title: 'Interactive Learning',
-      desc: 'Gamified lessons and quizzes.',
+      title: 'AI Automation',
+      desc: 'Automate workflows and repetitive tasks.',
     },
 
     {
-      icon: <Trophy className="h-8 w-8" />,
-      title: 'Leaderboard',
-      desc: 'Compete with eco learners globally.',
+      icon: <MessageSquare className="h-8 w-8" />,
+      title: 'Smart Conversations',
+      desc: 'Context-aware AI chat with memory.',
+    },
+
+    {
+      icon: <BarChart3 className="h-8 w-8" />,
+      title: 'Analytics Dashboard',
+      desc: 'Track customer engagement & AI performance.',
     },
   ];
 
   return (
 
-    <div className="overflow-hidden">
+    <div className="overflow-hidden bg-[#050816] text-white">
+
+      {/* BACKGROUND */}
+
+      <div className="fixed inset-0 -z-10">
+
+        <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-green-500/20 blur-[180px] rounded-full" />
+
+        <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-emerald-500/20 blur-[180px] rounded-full" />
+
+      </div>
 
       {/* HERO */}
 
-      <section className="relative min-h-screen flex items-center">
+      <section className="min-h-screen flex items-center">
 
-        <div className="absolute inset-0 overflow-hidden">
-
-          <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-green-400/20 blur-[150px] rounded-full" />
-
-          <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-emerald-500/20 blur-[150px] rounded-full" />
-
-        </div>
-
-        <div className="relative max-w-[1400px] mx-auto px-8 py-24 grid lg:grid-cols-2 gap-20 items-center">
+        <div className="max-w-7xl mx-auto px-8 py-24 grid lg:grid-cols-2 gap-20 items-center">
 
           {/* LEFT */}
 
           <motion.div
-            initial={{
-              opacity: 0,
-              y: 30,
-            }}
-            animate={{
-              opacity: 1,
-              y: 0,
-            }}
-            transition={{
-              duration: 0.8,
-            }}
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
           >
 
-            <div className="inline-flex items-center gap-3 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 px-6 py-3 rounded-full font-semibold mb-8">
+            <div className="inline-flex items-center gap-3 bg-green-500/10 border border-green-500/20 px-6 py-3 rounded-full text-green-400 font-semibold mb-8">
 
               <Sparkles size={18} />
 
-              AI Powered Sustainability Platform
+              AI-Powered Customer Support Platform
 
             </div>
 
-            <h1 className="text-6xl lg:text-7xl font-black leading-[1.05] text-slate-900 dark:text-white">
+            <h1 className="text-6xl lg:text-7xl font-black leading-[1.05]">
 
-              Learn.
+              Future of
               <br />
 
-              Protect.
+              AI Customer
               <br />
 
-              Transform 🌍
+              Support 🚀
 
             </h1>
 
-            <p className="mt-8 text-xl leading-relaxed text-gray-600 dark:text-gray-300 max-w-2xl">
+            <p className="mt-8 text-xl leading-relaxed text-gray-300 max-w-2xl">
 
-              EcoLearn is an AI-powered sustainability learning platform
-              helping students fight climate change through interactive
-              education, eco missions, smart AI tools, and gamified learning.
+              Build intelligent AI-powered customer support,
+              automation workflows, smart chatbots, analytics,
+              and real-time AI assistants with modern SaaS experience.
 
             </p>
 
@@ -113,7 +112,7 @@ function Home() {
                 className="bg-gradient-to-r from-green-500 to-emerald-600 hover:scale-105 transition-all duration-300 text-white px-8 py-4 rounded-2xl font-bold text-lg flex items-center gap-3 shadow-2xl"
               >
 
-                Get Started
+                Launch Platform
 
                 <ArrowRight className="h-5 w-5" />
 
@@ -121,7 +120,7 @@ function Home() {
 
               <Link
                 to="/ai-assistant"
-                className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 px-8 py-4 rounded-2xl font-semibold hover:shadow-xl transition-all dark:text-white"
+                className="border border-white/10 bg-white/5 hover:bg-white/10 px-8 py-4 rounded-2xl font-semibold transition-all"
               >
 
                 Open AI Assistant
@@ -135,29 +134,29 @@ function Home() {
             <div className="flex flex-wrap gap-10 mt-14">
 
               <div>
-                <h2 className="text-5xl font-black text-green-600">
-                  12K+
-                </h2>
-                <p className="text-gray-500 mt-2">
-                  Students
-                </p>
-              </div>
-
-              <div>
-                <h2 className="text-5xl font-black text-emerald-600">
-                  150+
-                </h2>
-                <p className="text-gray-500 mt-2">
-                  Eco Challenges
-                </p>
-              </div>
-
-              <div>
-                <h2 className="text-5xl font-black text-green-700">
+                <h2 className="text-5xl font-black text-green-400">
                   98%
                 </h2>
-                <p className="text-gray-500 mt-2">
-                  Positive Impact
+                <p className="text-gray-400 mt-2">
+                  Faster Support
+                </p>
+              </div>
+
+              <div>
+                <h2 className="text-5xl font-black text-emerald-400">
+                  24/7
+                </h2>
+                <p className="text-gray-400 mt-2">
+                  AI Automation
+                </p>
+              </div>
+
+              <div>
+                <h2 className="text-5xl font-black text-green-500">
+                  10K+
+                </h2>
+                <p className="text-gray-400 mt-2">
+                  Conversations
                 </p>
               </div>
 
@@ -168,22 +167,16 @@ function Home() {
           {/* RIGHT */}
 
           <motion.div
-            initial={{
-              opacity: 0,
-              scale: 0.9,
-            }}
-            animate={{
-              opacity: 1,
-              scale: 1,
-            }}
-            transition={{
-              duration: 0.8,
-            }}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8 }}
           >
 
-            <div className="glass rounded-[40px] border border-white/20 p-8 shadow-2xl">
+            <div className="bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[40px] p-8 shadow-[0_20px_80px_rgba(0,0,0,0.5)]">
 
-              <div className="bg-gradient-to-br from-green-500 to-emerald-600 rounded-[32px] p-8 text-white shadow-glow">
+              {/* AI CARD */}
+
+              <div className="bg-gradient-to-br from-green-500 to-emerald-600 rounded-[32px] p-8 shadow-2xl">
 
                 <div className="flex items-center gap-4 mb-6">
 
@@ -192,22 +185,24 @@ function Home() {
                   </div>
 
                   <div>
+
                     <h2 className="text-3xl font-black">
-                      Eco AI
+                      AI Assistant
                     </h2>
 
                     <p className="text-green-100">
-                      Gemini Powered
+                      Gemini + OpenRouter Powered
                     </p>
+
                   </div>
 
                 </div>
 
                 <p className="text-lg leading-relaxed text-green-50">
 
-                  Ask anything about climate change,
-                  renewable energy, sustainability,
-                  recycling, eco habits, and green technology.
+                  Smart AI support with voice,
+                  automation, sentiment analysis,
+                  memory support, and intelligent workflows.
 
                 </p>
 
@@ -221,21 +216,19 @@ function Home() {
 
                   <motion.div
                     key={index}
-                    whileHover={{
-                      y: -6,
-                    }}
-                    className="bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-xl border border-gray-100 dark:border-slate-800"
+                    whileHover={{ y: -6 }}
+                    className="bg-white/5 border border-white/10 rounded-3xl p-6"
                   >
 
-                    <div className="text-green-600 mb-4">
+                    <div className="text-green-400 mb-4">
                       {feature.icon}
                     </div>
 
-                    <h3 className="text-xl font-black dark:text-white">
+                    <h3 className="text-xl font-black">
                       {feature.title}
                     </h3>
 
-                    <p className="text-gray-500 mt-2 text-sm leading-relaxed">
+                    <p className="text-gray-400 mt-2 text-sm leading-relaxed">
                       {feature.desc}
                     </p>
 
@@ -253,66 +246,64 @@ function Home() {
 
       </section>
 
-      {/* EXTRA SECTION */}
+      {/* FEATURES */}
 
-      <section className="py-24">
+      <section className="py-28">
 
-        <div className="max-w-7xl mx-auto px-8 text-center">
+        <div className="max-w-7xl mx-auto px-8">
 
-          <h2 className="text-5xl font-black text-slate-900 dark:text-white">
+          <div className="text-center mb-20">
 
-            Why EcoLearn?
+            <h2 className="text-5xl font-black">
+              Powerful AI Features
+            </h2>
 
-          </h2>
+            <p className="text-gray-400 mt-6 text-xl">
+              Everything needed to win the AI Hackathon.
+            </p>
 
-          <p className="mt-6 text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+          </div>
 
-            A futuristic AI education ecosystem designed for
-            sustainability awareness, environmental learning,
-            and real-world eco action.
+          <div className="grid md:grid-cols-3 gap-8">
 
-          </p>
+            <div className="bg-white/5 border border-white/10 rounded-3xl p-10">
 
-          <div className="grid md:grid-cols-3 gap-8 mt-16">
+              <Mic className="h-14 w-14 text-green-400 mb-6" />
 
-            <div className="bg-white dark:bg-slate-900 rounded-3xl p-10 shadow-xl">
-
-              <Globe className="h-14 w-14 text-blue-500 mx-auto mb-5" />
-
-              <h3 className="text-2xl font-black dark:text-white">
-                Global Impact
+              <h3 className="text-2xl font-black">
+                Voice AI
               </h3>
 
-              <p className="text-gray-500 mt-4">
-                Learn how small actions create large environmental change.
+              <p className="text-gray-400 mt-4">
+                Voice-enabled customer support assistant with speech recognition.
               </p>
 
             </div>
 
-            <div className="bg-white dark:bg-slate-900 rounded-3xl p-10 shadow-xl">
+            <div className="bg-white/5 border border-white/10 rounded-3xl p-10">
 
-              <Zap className="h-14 w-14 text-yellow-500 mx-auto mb-5" />
+              <ShieldCheck className="h-14 w-14 text-emerald-400 mb-6" />
 
-              <h3 className="text-2xl font-black dark:text-white">
-                Gamified Learning
+              <h3 className="text-2xl font-black">
+                AI Ticketing
               </h3>
 
-              <p className="text-gray-500 mt-4">
-                Earn XP, unlock rewards, and compete with others.
+              <p className="text-gray-400 mt-4">
+                Automatically create and manage support tickets.
               </p>
 
             </div>
 
-            <div className="bg-white dark:bg-slate-900 rounded-3xl p-10 shadow-xl">
+            <div className="bg-white/5 border border-white/10 rounded-3xl p-10">
 
-              <Leaf className="h-14 w-14 text-green-500 mx-auto mb-5" />
+              <Cpu className="h-14 w-14 text-green-500 mb-6" />
 
-              <h3 className="text-2xl font-black dark:text-white">
-                Eco Friendly Habits
+              <h3 className="text-2xl font-black">
+                AI Automation
               </h3>
 
-              <p className="text-gray-500 mt-4">
-                Build sustainability habits through interactive missions.
+              <p className="text-gray-400 mt-4">
+                Automate customer support workflows and business processes.
               </p>
 
             </div>
@@ -324,6 +315,7 @@ function Home() {
       </section>
 
     </div>
+
   );
 }
 

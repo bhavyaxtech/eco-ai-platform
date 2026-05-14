@@ -20,6 +20,13 @@ import ProtectedRoute from './components/ProtectedRoute';
 
 import Home from './pages/Home';
 
+import UserDashboard from './pages/dashboard/UserDashboard';
+
+import AIReports from './pages/ai/AIReports';
+import CarbonCalculator from './pages/ai/CarbonCalculator';
+import VoiceAssistant from './pages/ai/VoiceAssistant';
+import AIAssistant from './pages/ai/AIAssistant';
+
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
 
@@ -35,8 +42,6 @@ import Friends from './pages/social/Friends';
 import Leaderboard from './pages/social/Leaderboard';
 
 import AdminDashboard from './pages/admin/Dashboard';
-
-import AIAssistant from './pages/AIAssistant';
 
 import { useAuthStore } from './lib/store';
 
@@ -72,6 +77,17 @@ function App() {
                   element={<Home />}
                 />
 
+                {/* USER DASHBOARD */}
+
+                <Route
+                  path="/dashboard"
+                  element={
+                    <ProtectedRoute>
+                      <UserDashboard />
+                    </ProtectedRoute>
+                  }
+                />
+
                 {/* AUTH */}
 
                 <Route
@@ -82,6 +98,44 @@ function App() {
                 <Route
                   path="/register"
                   element={<Register />}
+                />
+
+                {/* AI FEATURES */}
+
+                <Route
+                  path="/ai-chat"
+                  element={
+                    <ProtectedRoute>
+                      <AIAssistant />
+                    </ProtectedRoute>
+                  }
+                />
+
+                <Route
+                  path="/ai-reports"
+                  element={
+                    <ProtectedRoute>
+                      <AIReports />
+                    </ProtectedRoute>
+                  }
+                />
+
+                <Route
+                  path="/carbon-calculator"
+                  element={
+                    <ProtectedRoute>
+                      <CarbonCalculator />
+                    </ProtectedRoute>
+                  }
+                />
+
+                <Route
+                  path="/voice-ai"
+                  element={
+                    <ProtectedRoute>
+                      <VoiceAssistant />
+                    </ProtectedRoute>
+                  }
                 />
 
                 {/* QUIZZES */}
@@ -114,8 +168,6 @@ function App() {
                     </ProtectedRoute>
                   }
                 />
-
-                {/* LESSON DETAIL PAGE */}
 
                 <Route
                   path="/lesson/:id"
@@ -155,17 +207,6 @@ function App() {
                   element={
                     <ProtectedRoute>
                       <Leaderboard />
-                    </ProtectedRoute>
-                  }
-                />
-
-                {/* AI ASSISTANT */}
-
-                <Route
-                  path="/ai-assistant"
-                  element={
-                    <ProtectedRoute>
-                      <AIAssistant />
                     </ProtectedRoute>
                   }
                 />
