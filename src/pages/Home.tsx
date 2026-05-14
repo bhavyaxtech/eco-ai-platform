@@ -5,17 +5,13 @@ import { Link } from 'react-router-dom';
 import {
   ArrowRight,
   Bot,
-  Sparkles,
-  Globe,
-  Leaf,
-  Zap,
-  Trophy,
   Brain,
-  Mic,
-  ShieldCheck,
   BarChart3,
-  MessageSquare,
+  ShieldCheck,
+  Mic,
   Cpu,
+  MessageSquare,
+  Sparkles,
 } from 'lucide-react';
 
 import { motion } from 'framer-motion';
@@ -23,290 +19,335 @@ import { motion } from 'framer-motion';
 function Home() {
 
   const features = [
-
     {
-      icon: <Bot className="h-8 w-8" />,
-      title: 'AI Support Agent',
-      desc: '24/7 intelligent AI customer support assistant.',
+      icon: <Bot className="h-6 w-6" />,
+      title: 'AI Assistant',
+      desc: 'Real-time smart AI customer support.',
     },
 
     {
-      icon: <Brain className="h-8 w-8" />,
-      title: 'AI Automation',
-      desc: 'Automate workflows and repetitive tasks.',
+      icon: <Brain className="h-6 w-6" />,
+      title: 'Automation',
+      desc: 'Automate business workflows easily.',
     },
 
     {
-      icon: <MessageSquare className="h-8 w-8" />,
-      title: 'Smart Conversations',
-      desc: 'Context-aware AI chat with memory.',
+      icon: <MessageSquare className="h-6 w-6" />,
+      title: 'AI Memory',
+      desc: 'AI remembers conversations naturally.',
     },
 
     {
-      icon: <BarChart3 className="h-8 w-8" />,
-      title: 'Analytics Dashboard',
-      desc: 'Track customer engagement & AI performance.',
+      icon: <BarChart3 className="h-6 w-6" />,
+      title: 'Analytics',
+      desc: 'Track performance & engagement.',
     },
   ];
 
   return (
 
-    <div className="overflow-hidden bg-[#050816] text-white">
+    <div className="min-h-screen bg-[#071018] text-white overflow-hidden">
 
       {/* BACKGROUND */}
 
       <div className="fixed inset-0 -z-10">
 
-        <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-green-500/20 blur-[180px] rounded-full" />
+        <div className="absolute top-0 left-0 w-[400px] h-[400px] bg-emerald-500/10 blur-[120px] rounded-full" />
 
-        <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-emerald-500/20 blur-[180px] rounded-full" />
+        <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-green-500/10 blur-[120px] rounded-full" />
 
       </div>
 
       {/* HERO */}
 
-      <section className="min-h-screen flex items-center">
+      <section className="max-w-7xl mx-auto px-6 lg:px-10 pt-28 pb-20 grid lg:grid-cols-2 gap-16 items-center">
 
-        <div className="max-w-7xl mx-auto px-8 py-24 grid lg:grid-cols-2 gap-20 items-center">
+        {/* LEFT */}
 
-          {/* LEFT */}
+        <motion.div
+          initial={{ opacity: 0, y: 25 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7 }}
+        >
 
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-          >
+          {/* BADGE */}
+{/* 
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm font-medium mb-6">
 
-            <div className="inline-flex items-center gap-3 bg-green-500/10 border border-green-500/20 px-6 py-3 rounded-full text-green-400 font-semibold mb-8">
+            <Sparkles size={16} />
 
-              <Sparkles size={18} />
+            AI Customer Support Platform
 
-              AI-Powered Customer Support Platform
+          </div> */}
 
-            </div>
+          {/* HEADING */}
 
-            <h1 className="text-6xl lg:text-7xl font-black leading-[1.05]">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-black leading-tight tracking-tight max-w-xl">
 
-              Future of
-              <br />
+            Smart AI Support
+            <br />
 
-              AI Customer
-              <br />
+            For Businesses
 
-              Support 🚀
+          </h1>
 
-            </h1>
+          {/* DESCRIPTION */}
 
-            <p className="mt-8 text-xl leading-relaxed text-gray-300 max-w-2xl">
+          <p className="mt-6 text-gray-400 text-lg leading-relaxed max-w-xl">
 
-              Build intelligent AI-powered customer support,
-              automation workflows, smart chatbots, analytics,
-              and real-time AI assistants with modern SaaS experience.
+            Build AI-powered customer support,
+            automation workflows, analytics dashboards,
+            and intelligent assistants with a modern SaaS experience.
 
-            </p>
+          </p>
 
-            <div className="flex flex-wrap gap-5 mt-10">
+          {/* BUTTONS */}
 
-              <Link
-                to="/register"
-                className="bg-gradient-to-r from-green-500 to-emerald-600 hover:scale-105 transition-all duration-300 text-white px-8 py-4 rounded-2xl font-bold text-lg flex items-center gap-3 shadow-2xl"
-              >
+          <div className="flex flex-wrap gap-4 mt-8">
 
-                Launch Platform
+            <Link
+              to="/dashboard"
+              className="bg-emerald-500 hover:bg-emerald-400 transition-all duration-300 px-7 py-3 rounded-2xl font-semibold flex items-center gap-2 shadow-lg shadow-emerald-500/20"
+            >
 
-                <ArrowRight className="h-5 w-5" />
+              Launch Platform
 
-              </Link>
+              <ArrowRight size={18} />
 
-              <Link
-                to="/ai-assistant"
-                className="border border-white/10 bg-white/5 hover:bg-white/10 px-8 py-4 rounded-2xl font-semibold transition-all"
-              >
+            </Link>
 
-                Open AI Assistant
+            <Link
+              to="/ai-assistant"
+              className="border border-white/10 bg-white/5 hover:bg-white/10 transition-all duration-300 px-7 py-3 rounded-2xl font-semibold"
+            >
 
-              </Link>
+              Open AI Assistant
 
-            </div>
+            </Link>
 
-            {/* STATS */}
+          </div>
 
-            <div className="flex flex-wrap gap-10 mt-14">
+          {/* STATS */}
 
-              <div>
-                <h2 className="text-5xl font-black text-green-400">
-                  98%
-                </h2>
-                <p className="text-gray-400 mt-2">
-                  Faster Support
-                </p>
-              </div>
+          <div className="flex gap-10 mt-14 flex-wrap">
 
-              <div>
-                <h2 className="text-5xl font-black text-emerald-400">
-                  24/7
-                </h2>
-                <p className="text-gray-400 mt-2">
-                  AI Automation
-                </p>
-              </div>
+            <div>
 
-              <div>
-                <h2 className="text-5xl font-black text-green-500">
-                  10K+
-                </h2>
-                <p className="text-gray-400 mt-2">
-                  Conversations
-                </p>
-              </div>
+              <h2 className="text-3xl font-black text-emerald-400">
+
+                24/7
+
+              </h2>
+
+              <p className="text-sm text-gray-400 mt-1">
+
+                AI Support
+
+              </p>
 
             </div>
 
-          </motion.div>
+            <div>
 
-          {/* RIGHT */}
+              <h2 className="text-3xl font-black text-green-400">
 
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8 }}
-          >
+                98%
 
-            <div className="bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[40px] p-8 shadow-[0_20px_80px_rgba(0,0,0,0.5)]">
+              </h2>
 
-              {/* AI CARD */}
+              <p className="text-sm text-gray-400 mt-1">
 
-              <div className="bg-gradient-to-br from-green-500 to-emerald-600 rounded-[32px] p-8 shadow-2xl">
+                Faster Replies
 
-                <div className="flex items-center gap-4 mb-6">
+              </p>
 
-                  <div className="bg-white/20 p-4 rounded-2xl">
-                    <Bot className="h-10 w-10" />
-                  </div>
+            </div>
 
-                  <div>
+            <div>
 
-                    <h2 className="text-3xl font-black">
-                      AI Assistant
-                    </h2>
+              <h2 className="text-3xl font-black text-emerald-300">
 
-                    <p className="text-green-100">
-                      Gemini + OpenRouter Powered
-                    </p>
+                10K+
 
-                  </div>
+              </h2>
+
+              <p className="text-sm text-gray-400 mt-1">
+
+                Conversations
+
+              </p>
+
+            </div>
+
+          </div>
+
+        </motion.div>
+
+        {/* RIGHT */}
+
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.7 }}
+        >
+
+          <div className="bg-white/5 border border-white/10 backdrop-blur-xl rounded-3xl p-6">
+
+            {/* TOP CARD */}
+
+            <div className="bg-gradient-to-br from-emerald-500 to-green-600 rounded-3xl p-7">
+
+              <div className="flex items-center gap-4">
+
+                <div className="bg-white/20 p-4 rounded-2xl">
+
+                  <Bot className="h-8 w-8" />
 
                 </div>
 
-                <p className="text-lg leading-relaxed text-green-50">
+                <div>
 
-                  Smart AI support with voice,
-                  automation, sentiment analysis,
-                  memory support, and intelligent workflows.
+                  <h2 className="text-3xl font-black">
 
-                </p>
+                    AI Assistant
 
-              </div>
+                  </h2>
 
-              {/* FEATURE GRID */}
+                  <p className="text-green-50 text-sm mt-1">
 
-              <div className="grid grid-cols-2 gap-5 mt-6">
+                    Powered by Gemini AI
 
-                {features.map((feature, index) => (
+                  </p>
 
-                  <motion.div
-                    key={index}
-                    whileHover={{ y: -6 }}
-                    className="bg-white/5 border border-white/10 rounded-3xl p-6"
-                  >
-
-                    <div className="text-green-400 mb-4">
-                      {feature.icon}
-                    </div>
-
-                    <h3 className="text-xl font-black">
-                      {feature.title}
-                    </h3>
-
-                    <p className="text-gray-400 mt-2 text-sm leading-relaxed">
-                      {feature.desc}
-                    </p>
-
-                  </motion.div>
-
-                ))}
+                </div>
 
               </div>
+
+              <p className="mt-6 text-green-50 leading-relaxed text-lg">
+
+                Intelligent AI chat, automation,
+                analytics, voice assistant,
+                and smart customer support.
+
+              </p>
 
             </div>
 
-          </motion.div>
+            {/* FEATURES */}
 
-        </div>
+            <div className="grid grid-cols-2 gap-4 mt-5">
+
+              {features.map((feature, index) => (
+
+                <motion.div
+                  key={index}
+                  whileHover={{ y: -4 }}
+                  className="bg-[#101826] border border-white/5 rounded-2xl p-5"
+                >
+
+                  <div className="text-emerald-400 mb-4">
+
+                    {feature.icon}
+
+                  </div>
+
+                  <h3 className="font-semibold text-lg">
+
+                    {feature.title}
+
+                  </h3>
+
+                  <p className="text-sm text-gray-400 mt-2 leading-relaxed">
+
+                    {feature.desc}
+
+                  </p>
+
+                </motion.div>
+
+              ))}
+
+            </div>
+
+          </div>
+
+        </motion.div>
 
       </section>
 
-      {/* FEATURES */}
+      {/* FEATURES SECTION */}
 
-      <section className="py-28">
+      <section className="max-w-7xl mx-auto px-6 lg:px-10 pb-24">
 
-        <div className="max-w-7xl mx-auto px-8">
+        <div className="text-center mb-14">
 
-          <div className="text-center mb-20">
+          <h2 className="text-3xl lg:text-4xl font-black">
 
-            <h2 className="text-5xl font-black">
-              Powerful AI Features
-            </h2>
+            Platform Features
 
-            <p className="text-gray-400 mt-6 text-xl">
-              Everything needed to win the AI Hackathon.
+          </h2>
+
+          <p className="text-gray-400 mt-4">
+
+            Everything needed for a modern AI SaaS platform.
+
+          </p>
+
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-6">
+
+          <div className="bg-white/5 border border-white/10 rounded-3xl p-8">
+
+            <Mic className="h-10 w-10 text-emerald-400 mb-5" />
+
+            <h3 className="text-xl font-semibold">
+
+              Voice AI
+
+            </h3>
+
+            <p className="text-gray-400 mt-3 leading-relaxed text-sm">
+
+              Voice-enabled AI assistant with speech recognition.
+
             </p>
 
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="bg-white/5 border border-white/10 rounded-3xl p-8">
 
-            <div className="bg-white/5 border border-white/10 rounded-3xl p-10">
+            <ShieldCheck className="h-10 w-10 text-green-400 mb-5" />
 
-              <Mic className="h-14 w-14 text-green-400 mb-6" />
+            <h3 className="text-xl font-semibold">
 
-              <h3 className="text-2xl font-black">
-                Voice AI
-              </h3>
+              AI Ticketing
 
-              <p className="text-gray-400 mt-4">
-                Voice-enabled customer support assistant with speech recognition.
-              </p>
+            </h3>
 
-            </div>
+            <p className="text-gray-400 mt-3 leading-relaxed text-sm">
 
-            <div className="bg-white/5 border border-white/10 rounded-3xl p-10">
+              Automatically create and manage support tickets.
 
-              <ShieldCheck className="h-14 w-14 text-emerald-400 mb-6" />
+            </p>
 
-              <h3 className="text-2xl font-black">
-                AI Ticketing
-              </h3>
+          </div>
 
-              <p className="text-gray-400 mt-4">
-                Automatically create and manage support tickets.
-              </p>
+          <div className="bg-white/5 border border-white/10 rounded-3xl p-8">
 
-            </div>
+            <Cpu className="h-10 w-10 text-emerald-300 mb-5" />
 
-            <div className="bg-white/5 border border-white/10 rounded-3xl p-10">
+            <h3 className="text-xl font-semibold">
 
-              <Cpu className="h-14 w-14 text-green-500 mb-6" />
+              Workflow Automation
 
-              <h3 className="text-2xl font-black">
-                AI Automation
-              </h3>
+            </h3>
 
-              <p className="text-gray-400 mt-4">
-                Automate customer support workflows and business processes.
-              </p>
+            <p className="text-gray-400 mt-3 leading-relaxed text-sm">
 
-            </div>
+              Automate repetitive business operations using AI.
+
+            </p>
 
           </div>
 
@@ -315,7 +356,6 @@ function Home() {
       </section>
 
     </div>
-
   );
 }
 

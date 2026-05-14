@@ -9,10 +9,10 @@ const JWT_SECRET =
   process.env.JWT_SECRET ||
   'your-secret-key';
 
-/* FAKE DATABASE */
+/* =========================
+   REGISTER
+========================= */
 
-
-/* REGISTER */
 router.post(
   '/register',
   async (req, res) => {
@@ -25,13 +25,28 @@ router.post(
         password,
       } = req.body;
 
+      /* VALIDATION */
+
+      if (
+        !username ||
+        !email ||
+        !password
+      ) {
+        return res.status(400).json({
+          message:
+            'All fields are required',
+        });
+      }
+
+      /* CHECK EXISTING USER */
+
       const existingUser =
-  await User.findOne({
-    $or: [
-      { email },
-      { username },
-    ],
-  });
+        await User.findOne({
+          $or: [
+            { email },
+            { username },
+          ],
+        });
 
       if (existingUser) {
 
@@ -41,36 +56,37 @@ router.post(
         });
       }
 
+      /* HASH PASSWORD */
+
       const hashedPassword =
         await bcrypt.hash(
           password,
           10
         );
 
-      /* INITIAL USER */
+      /* CREATE USER */
 
-      const newUser = new User({
-        id: users.length + 1,
+      const newUser =
+        await User.create({
 
-        username,
+          username,
 
-        email,
+          email,
 
-        password:
-          hashedPassword,
+          password:
+            hashedPassword,
 
-        role: 'user',
+          role: 'user',
 
-        /* STARTING POINTS */
+          points: 1200,
+        });
 
-        points: 1200,
-      });
-
-      await newUser.save();
+      /* GENERATE TOKEN */
 
       const token = jwt.sign(
         {
-          userId: newUser.id,
+          userId:
+            newUser._id,
         },
         JWT_SECRET,
         {
@@ -78,13 +94,15 @@ router.post(
         }
       );
 
+      /* RESPONSE */
+
       res.status(201).json({
 
         token,
 
         user: {
 
-          id: newUser.id,
+          id: newUser._id,
 
           username:
             newUser.username,
@@ -102,7 +120,10 @@ router.post(
 
     } catch (error) {
 
-      console.error(error);
+      console.error(
+        'REGISTER ERROR:',
+        error
+      );
 
       res.status(500).json({
         message:
@@ -112,7 +133,9 @@ router.post(
   }
 );
 
-/* LOGIN */
+/* =========================
+   LOGIN
+========================= */
 
 router.post(
   '/login',
@@ -125,10 +148,12 @@ router.post(
         password,
       } = req.body;
 
+      /* FIND USER */
+
       const user =
-  await User.findOne({
-    email,
-  });
+        await User.findOne({
+          email,
+        });
 
       if (!user) {
 
@@ -137,6 +162,8 @@ router.post(
             'Invalid credentials',
         });
       }
+
+      /* CHECK PASSWORD */
 
       const validPassword =
         await bcrypt.compare(
@@ -152,9 +179,12 @@ router.post(
         });
       }
 
+      /* TOKEN */
+
       const token = jwt.sign(
         {
-          userId: user.id,
+          userId:
+            user._id,
         },
         JWT_SECRET,
         {
@@ -162,13 +192,15 @@ router.post(
         }
       );
 
+      /* RESPONSE */
+
       res.json({
 
         token,
 
         user: {
 
-          id: user.id,
+          id: user._id,
 
           username:
             user.username,
@@ -179,8 +211,6 @@ router.post(
           role:
             user.role,
 
-          /* IMPORTANT */
-
           points:
             user.points || 1200,
         },
@@ -188,7 +218,10 @@ router.post(
 
     } catch (error) {
 
-      console.error(error);
+      console.error(
+        'LOGIN ERROR:',
+        error
+      );
 
       res.status(500).json({
         message:

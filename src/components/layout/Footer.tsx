@@ -1,21 +1,21 @@
 import React from 'react';
 
 import {
-  Leaf,
   Github,
   Twitter,
   Globe,
+  Bot,
 } from 'lucide-react';
 
 function Footer() {
 
   return (
 
-    <footer className="bg-slate-950 text-white mt-20">
+    <footer className="border-t border-white/5 bg-[#071018] text-white">
 
-      <div className="max-w-7xl mx-auto px-6 py-16">
+      <div className="max-w-7xl mx-auto px-6 py-14">
 
-        <div className="grid md:grid-cols-4 gap-10">
+        <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-12">
 
           {/* BRAND */}
 
@@ -23,44 +23,66 @@ function Footer() {
 
             <div className="flex items-center gap-3 mb-5">
 
-              <div className="bg-gradient-to-r from-green-500 to-emerald-600 p-3 rounded-2xl">
+              <div className="h-11 w-11 rounded-2xl bg-gradient-to-br from-emerald-400 to-green-600 flex items-center justify-center shadow-lg shadow-emerald-500/20">
 
-                <Leaf className="h-6 w-6" />
+                <Bot className="h-5 w-5 text-white" />
 
               </div>
 
-              <h2 className="text-3xl font-black">
+              <div>
 
-                EcoLearn
+                <h2 className="text-xl font-bold tracking-tight">
 
-              </h2>
+                  EcoLearn AI
+
+                </h2>
+
+                <p className="text-sm text-emerald-400">
+
+                  AI Support Platform
+
+                </p>
+
+              </div>
 
             </div>
 
-            <p className="text-gray-400 leading-relaxed">
+            <p className="text-sm leading-7 text-gray-400 max-w-sm">
 
-              AI powered sustainability learning platform for modern students.
+              Modern AI-powered customer support and automation platform
+              built for smart businesses and intelligent workflows.
 
             </p>
 
           </div>
 
-          {/* LINKS */}
+          {/* PRODUCT */}
 
           <div>
 
-            <h3 className="font-bold text-xl mb-5">
+            <h3 className="text-sm font-semibold uppercase tracking-wider text-white mb-5">
 
-              Platform
+              Product
 
             </h3>
 
-            <div className="space-y-3 text-gray-400">
+            <div className="space-y-3 text-sm text-gray-400">
 
-              <p>Lessons</p>
-              <p>Quizzes</p>
-              <p>AI Assistant</p>
-              <p>Leaderboard</p>
+              <p className="hover:text-white transition cursor-pointer">
+                AI Assistant
+              </p>
+
+              <p className="hover:text-white transition cursor-pointer">
+                Voice AI
+              </p>
+
+              <p className="hover:text-white transition cursor-pointer">
+                AI Reports
+              </p>
+
+              <p className="hover:text-white transition cursor-pointer">
+                Automation
+              </p>
 
             </div>
 
@@ -70,18 +92,29 @@ function Footer() {
 
           <div>
 
-            <h3 className="font-bold text-xl mb-5">
+            <h3 className="text-sm font-semibold uppercase tracking-wider text-white mb-5">
 
               Company
 
             </h3>
 
-            <div className="space-y-3 text-gray-400">
+            <div className="space-y-3 text-sm text-gray-400">
 
-              <p>About</p>
-              <p>Careers</p>
-              <p>Privacy</p>
-              <p>Terms</p>
+              <p className="hover:text-white transition cursor-pointer">
+                About
+              </p>
+
+              <p className="hover:text-white transition cursor-pointer">
+                Privacy
+              </p>
+
+              <p className="hover:text-white transition cursor-pointer">
+                Terms
+              </p>
+
+              <p className="hover:text-white transition cursor-pointer">
+                Contact
+              </p>
 
             </div>
 
@@ -91,7 +124,7 @@ function Footer() {
 
           <div>
 
-            <h3 className="font-bold text-xl mb-5">
+            <h3 className="text-sm font-semibold uppercase tracking-wider text-white mb-5">
 
               Connect
 
@@ -99,23 +132,23 @@ function Footer() {
 
             <div className="flex gap-4">
 
-              <div className="bg-slate-800 hover:bg-green-600 transition p-4 rounded-2xl cursor-pointer">
+              <button className="h-11 w-11 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-emerald-500 hover:border-emerald-500 transition-all duration-300">
 
-                <Github />
+                <Github className="h-5 w-5" />
 
-              </div>
+              </button>
 
-              <div className="bg-slate-800 hover:bg-blue-500 transition p-4 rounded-2xl cursor-pointer">
+              <button className="h-11 w-11 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-sky-500 hover:border-sky-500 transition-all duration-300">
 
-                <Twitter />
+                <Twitter className="h-5 w-5" />
 
-              </div>
+              </button>
 
-              <div className="bg-slate-800 hover:bg-emerald-500 transition p-4 rounded-2xl cursor-pointer">
+              <button className="h-11 w-11 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-green-500 hover:border-green-500 transition-all duration-300">
 
-                <Globe />
+                <Globe className="h-5 w-5" />
 
-              </div>
+              </button>
 
             </div>
 
@@ -123,9 +156,21 @@ function Footer() {
 
         </div>
 
-        <div className="border-t border-slate-800 mt-14 pt-8 text-center text-gray-500">
+        {/* BOTTOM */}
 
-          © 2025 EcoLearn. All rights reserved.
+        <div className="border-t border-white/5 mt-12 pt-6 flex flex-col md:flex-row items-center justify-between gap-4">
+
+          <p className="text-sm text-gray-500">
+
+            © 2025 EcoLearn AI. All rights reserved.
+
+          </p>
+
+          <p className="text-sm text-gray-500">
+
+            Built with React, AI & Modern SaaS Design
+
+          </p>
 
         </div>
 

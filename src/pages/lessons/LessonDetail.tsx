@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import {
   useParams,
@@ -7,11 +7,14 @@ import {
 
 import {
   ArrowLeft,
-  BookOpen,
   Leaf,
   Award,
   CheckCircle2,
+  Clock3,
   PlayCircle,
+  BookOpen,
+  Sparkles,
+  ChevronRight,
 } from 'lucide-react';
 
 import { motion } from 'framer-motion';
@@ -19,8 +22,8 @@ import { motion } from 'framer-motion';
 const lessons = [
   {
     id: 1,
-    title:
-      'Introduction to Sustainability',
+
+    title: 'Introduction to Sustainability',
 
     category: 'Fundamentals',
 
@@ -28,19 +31,25 @@ const lessons = [
 
     xp: 100,
 
-    content: `
-Sustainability means meeting our present needs without harming future generations.
+    sections: [
+      {
+        title: 'What is Sustainability?',
+        content:
+          'Sustainability means meeting present needs without harming future generations while protecting nature and resources.',
+      },
 
-It includes:
+      {
+        title: 'Why It Matters',
+        content:
+          'Sustainability reduces pollution, saves resources, and creates a healthier future for everyone.',
+      },
 
-• Protecting nature
-• Reducing pollution
-• Saving resources
-• Using renewable energy
-• Conserving water
-
-Sustainability helps fight climate change and protects biodiversity.
-    `,
+      {
+        title: 'Key Areas',
+        content:
+          'Renewable energy, recycling, biodiversity, conservation, and eco-friendly living are major sustainability areas.',
+      },
+    ],
 
     tips: [
       'Use reusable bottles',
@@ -52,6 +61,7 @@ Sustainability helps fight climate change and protects biodiversity.
 
   {
     id: 2,
+
     title: 'Waste Management',
 
     category: 'Practical Skills',
@@ -60,31 +70,38 @@ Sustainability helps fight climate change and protects biodiversity.
 
     xp: 150,
 
-    content: `
-Waste management is the process of collecting, recycling, and disposing waste properly.
+    sections: [
+      {
+        title: 'Understanding Waste',
+        content:
+          'Waste includes plastic, food, paper, electronic, and industrial waste generated daily.',
+      },
 
-Types of waste:
+      {
+        title: 'Recycling Importance',
+        content:
+          'Recycling reduces landfill waste, saves energy, and protects natural resources.',
+      },
 
-• Organic waste
-• Plastic waste
-• Electronic waste
-• Hazardous waste
-
-Good waste management reduces pollution and keeps cities clean.
-    `,
+      {
+        title: 'Smart Waste Solutions',
+        content:
+          'Modern systems use composting, smart bins, recycling plants, and AI sorting systems.',
+      },
+    ],
 
     tips: [
       'Separate wet & dry waste',
-      'Avoid single-use plastics',
+      'Avoid single-use plastic',
+      'Reuse old products',
       'Compost kitchen waste',
-      'Recycle paper',
     ],
   },
 
   {
     id: 3,
-    title:
-      'Biodiversity Conservation',
+
+    title: 'Biodiversity Conservation',
 
     category: 'Advanced Topics',
 
@@ -92,24 +109,31 @@ Good waste management reduces pollution and keeps cities clean.
 
     xp: 200,
 
-    content: `
-Biodiversity means all living organisms on Earth.
+    sections: [
+      {
+        title: 'What is Biodiversity?',
+        content:
+          'Biodiversity includes all living organisms such as plants, animals, forests, and ecosystems.',
+      },
 
-Conservation protects:
+      {
+        title: 'Threats to Nature',
+        content:
+          'Deforestation, climate change, pollution, and habitat destruction threaten biodiversity.',
+      },
 
-• Forests
-• Oceans
-• Wildlife
-• Ecosystems
-
-Human activities threaten biodiversity through pollution and deforestation.
-    `,
+      {
+        title: 'Conservation Methods',
+        content:
+          'Protected forests, wildlife reserves, clean energy, and sustainable farming help conservation.',
+      },
+    ],
 
     tips: [
-      'Protect wildlife',
-      'Reduce deforestation',
-      'Avoid pollution',
+      'Protect forests',
+      'Reduce pollution',
       'Support eco-products',
+      'Save wildlife habitats',
     ],
   },
 ];
@@ -122,11 +146,14 @@ function LessonDetail() {
     (l) => l.id === Number(id)
   );
 
+  const [completed, setCompleted] =
+    useState<number[]>([]);
+
   if (!lesson) {
 
     return (
 
-      <div className="min-h-screen flex items-center justify-center text-4xl font-bold text-red-500">
+      <div className="min-h-screen bg-[#07111f] flex items-center justify-center text-red-500 text-2xl font-bold">
 
         Lesson Not Found
 
@@ -134,237 +161,362 @@ function LessonDetail() {
     );
   }
 
+  const progress =
+    (completed.length /
+      lesson.sections.length) *
+    100;
+
   return (
 
-    <div className="max-w-6xl mx-auto px-6 py-10">
+    <div className="min-h-screen bg-[#07111f] text-white px-4 md:px-6 py-6">
 
-      {/* BACK BUTTON */}
+      <div className="max-w-7xl mx-auto">
 
-      <Link
-        to="/lessons"
-        className="inline-flex items-center gap-2 text-green-600 font-semibold hover:text-green-700 mb-8"
-      >
-
-        <ArrowLeft className="h-5 w-5" />
-
-        Back to Lessons
-
-      </Link>
-
-      {/* HERO */}
-
-      <motion.div
-        initial={{
-          opacity: 0,
-          y: 30,
-        }}
-        animate={{
-          opacity: 1,
-          y: 0,
-        }}
-        className="bg-white rounded-[32px] p-10 shadow-2xl border border-gray-100"
-      >
-
-        <div className="flex flex-wrap items-center justify-between gap-6">
-
-          <div>
-
-            <div className="flex items-center gap-3 mb-5">
-
-              <div className="bg-green-100 p-4 rounded-2xl">
-
-                <Leaf className="text-green-600 h-8 w-8" />
-
-              </div>
-
-              <span className="bg-green-100 text-green-700 px-4 py-2 rounded-xl font-semibold">
-
-                {lesson.category}
-
-              </span>
-
-            </div>
-
-            <h1 className="text-6xl font-black text-green-700 leading-tight">
-
-              {lesson.title}
-
-            </h1>
-
-            <p className="text-gray-600 mt-5 text-xl max-w-3xl leading-relaxed">
-
-              Learn practical sustainability concepts and build eco-friendly habits.
-
-            </p>
-
-          </div>
-
-          <div className="bg-gradient-to-br from-green-500 to-emerald-600 text-white rounded-3xl p-8 shadow-xl">
-
-            <div className="flex items-center gap-3 mb-4">
-
-              <Award className="h-7 w-7" />
-
-              <span className="font-bold text-xl">
-
-                XP Reward
-
-              </span>
-
-            </div>
-
-            <div className="text-5xl font-black">
-
-              +{lesson.xp}
-
-            </div>
-
-          </div>
-
-        </div>
-
-      </motion.div>
-
-      {/* VIDEO SECTION */}
-
-      <motion.div
-        initial={{
-          opacity: 0,
-          y: 20,
-        }}
-        animate={{
-          opacity: 1,
-          y: 0,
-        }}
-        transition={{
-          delay: 0.1,
-        }}
-        className="mt-10 bg-gradient-to-r from-green-500 to-emerald-600 rounded-[32px] p-10 text-white shadow-xl"
-      >
-
-        <div className="flex items-center gap-4 mb-6">
-
-          <PlayCircle className="h-10 w-10" />
-
-          <h2 className="text-4xl font-black">
-
-            Interactive Learning
-
-          </h2>
-
-        </div>
-
-        <p className="text-xl leading-relaxed opacity-90">
-
-          Future version can include AI videos, voice narration, interactive simulations, and sustainability visualizations.
-        </p>
-
-      </motion.div>
-
-      {/* LESSON CONTENT */}
-
-      <motion.div
-        initial={{
-          opacity: 0,
-          y: 20,
-        }}
-        animate={{
-          opacity: 1,
-          y: 0,
-        }}
-        transition={{
-          delay: 0.2,
-        }}
-        className="mt-10 bg-white rounded-[32px] p-10 shadow-xl"
-      >
-
-        <div className="flex items-center gap-4 mb-8">
-
-          <BookOpen className="text-green-600 h-8 w-8" />
-
-          <h2 className="text-4xl font-black text-gray-900">
-
-            Lesson Content
-
-          </h2>
-
-        </div>
-
-        <div className="text-gray-700 text-xl leading-[2.2rem] whitespace-pre-line">
-
-          {lesson.content}
-
-        </div>
-
-      </motion.div>
-
-      {/* ECO TIPS */}
-
-      <motion.div
-        initial={{
-          opacity: 0,
-          y: 20,
-        }}
-        animate={{
-          opacity: 1,
-          y: 0,
-        }}
-        transition={{
-          delay: 0.3,
-        }}
-        className="mt-10 bg-green-50 rounded-[32px] p-10 border border-green-100"
-      >
-
-        <h2 className="text-4xl font-black text-green-700 mb-8">
-
-          Eco Action Tips 🌱
-
-        </h2>
-
-        <div className="grid md:grid-cols-2 gap-6">
-
-          {lesson.tips.map(
-            (tip, index) => (
-
-              <div
-                key={index}
-                className="bg-white p-6 rounded-2xl shadow-md flex items-center gap-4"
-              >
-
-                <CheckCircle2 className="text-green-500 h-7 w-7" />
-
-                <span className="text-lg font-semibold text-gray-700">
-
-                  {tip}
-
-                </span>
-
-              </div>
-            )
-          )}
-
-        </div>
-
-      </motion.div>
-
-      {/* ACTION BUTTONS */}
-
-      <div className="flex flex-wrap gap-6 mt-12">
+        {/* BACK */}
 
         <Link
-          to="/quizzes"
-          className="bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-2xl font-bold text-lg transition"
+          to="/lessons"
+          className="inline-flex items-center gap-2 text-green-400 hover:text-green-300 mb-5 text-sm"
         >
 
-          Take Quiz
+          <ArrowLeft className="h-4 w-4" />
+
+          Back to Lessons
 
         </Link>
 
-        <button className="bg-black hover:bg-gray-900 text-white px-8 py-4 rounded-2xl font-bold text-lg transition">
+        {/* GRID */}
 
-          Mark Complete
+        <div className="grid lg:grid-cols-[1fr_280px] gap-6">
 
-        </button>
+          {/* LEFT SIDE */}
+
+          <div>
+
+            {/* HERO */}
+
+            <motion.div
+              initial={{
+                opacity: 0,
+                y: 20,
+              }}
+              animate={{
+                opacity: 1,
+                y: 0,
+              }}
+              className="bg-[#0d1721] border border-white/5 rounded-3xl p-5 md:p-7"
+            >
+
+              {/* TAGS */}
+
+              <div className="flex flex-wrap gap-3 mb-4">
+
+                <div className="bg-green-500/10 text-green-400 px-3 py-1 rounded-xl text-xs font-semibold flex items-center gap-2">
+
+                  <Leaf className="h-4 w-4" />
+
+                  {lesson.category}
+
+                </div>
+
+                <div className="bg-white/5 px-3 py-1 rounded-xl text-xs text-gray-300 flex items-center gap-2">
+
+                  <Clock3 className="h-4 w-4" />
+
+                  {lesson.duration}
+
+                </div>
+
+              </div>
+
+              {/* TITLE */}
+
+              <h1 className="text-2xl md:text-3xl font-black leading-tight mb-3">
+
+                {lesson.title}
+
+              </h1>
+
+              <p className="text-gray-400 text-sm leading-relaxed max-w-2xl">
+
+                Learn sustainability concepts and eco-friendly habits through modern interactive lessons.
+
+              </p>
+
+              {/* PROGRESS */}
+
+              <div className="mt-5">
+
+                <div className="flex items-center justify-between mb-2">
+
+                  <span className="text-xs text-gray-400">
+
+                    Progress
+
+                  </span>
+
+                  <span className="text-xs font-bold text-green-400">
+
+                    {Math.round(progress)}%
+
+                  </span>
+
+                </div>
+
+                <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
+
+                  <div
+                    className="h-full bg-gradient-to-r from-green-400 to-emerald-500 rounded-full"
+                    style={{
+                      width: `${progress}%`,
+                    }}
+                  />
+
+                </div>
+
+              </div>
+
+            </motion.div>
+
+            {/* INTERACTIVE */}
+
+            <div className="mt-5 bg-gradient-to-r from-green-500 to-emerald-600 rounded-3xl p-5">
+
+              <div className="flex items-center gap-3 mb-3">
+
+                <PlayCircle className="h-7 w-7" />
+
+                <h2 className="text-xl font-black">
+
+                  Interactive Learning
+
+                </h2>
+
+              </div>
+
+              <p className="text-sm text-green-50 leading-relaxed">
+
+                AI-powered sustainability education with simulations, voice narration, and real-world examples.
+
+              </p>
+
+            </div>
+
+            {/* SECTIONS */}
+
+            <div className="mt-5 space-y-4">
+
+              {lesson.sections.map(
+                (section, index) => {
+
+                  const done =
+                    completed.includes(index);
+
+                  return (
+
+                    <motion.div
+                      key={index}
+                      initial={{
+                        opacity: 0,
+                        y: 20,
+                      }}
+                      animate={{
+                        opacity: 1,
+                        y: 0,
+                      }}
+                      className="bg-[#0d1721] border border-white/5 rounded-3xl p-5"
+                    >
+
+                      <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
+
+                        <div className="flex-1">
+
+                          <div className="flex items-center gap-3 mb-3">
+
+                            <div className="w-10 h-10 rounded-2xl bg-green-500/10 flex items-center justify-center">
+
+                              <BookOpen className="text-green-400 h-5 w-5" />
+
+                            </div>
+
+                            <h2 className="text-lg font-bold">
+
+                              {section.title}
+
+                            </h2>
+
+                          </div>
+
+                          <p className="text-gray-300 text-sm leading-7">
+
+                            {section.content}
+
+                          </p>
+
+                        </div>
+
+                        <button
+                          onClick={() => {
+
+                            if (!done) {
+
+                              setCompleted([
+                                ...completed,
+                                index,
+                              ]);
+                            }
+                          }}
+                          className={`px-4 py-2 rounded-2xl text-sm font-bold transition-all
+
+                          ${
+                            done
+                              ? 'bg-green-500 text-white'
+                              : 'bg-white/10 hover:bg-white/20'
+                          }
+                          `}
+                        >
+
+                          {done
+                            ? 'Completed'
+                            : 'Mark Done'}
+
+                        </button>
+
+                      </div>
+
+                    </motion.div>
+                  );
+                }
+              )}
+
+            </div>
+
+            {/* ECO TIPS */}
+
+            <div className="mt-5 bg-[#0d1721] border border-white/5 rounded-3xl p-5">
+
+              <div className="flex items-center gap-3 mb-5">
+
+                <Sparkles className="text-green-400 h-5 w-5" />
+
+                <h2 className="text-xl font-black">
+
+                  Eco Action Tips
+
+                </h2>
+
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-3">
+
+                {lesson.tips.map(
+                  (tip, index) => (
+
+                    <div
+                      key={index}
+                      className="bg-black/20 rounded-2xl p-4 flex items-center gap-3"
+                    >
+
+                      <CheckCircle2 className="text-green-400 h-5 w-5" />
+
+                      <span className="text-sm text-gray-200">
+
+                        {tip}
+
+                      </span>
+
+                    </div>
+                  )
+                )}
+
+              </div>
+
+            </div>
+
+          </div>
+
+          {/* SIDEBAR */}
+
+          <div>
+
+            <div className="sticky top-24 bg-[#0d1721] border border-white/5 rounded-3xl p-5">
+
+              <h2 className="text-xl font-black mb-4">
+
+                Overview
+
+              </h2>
+
+              {/* XP */}
+
+              <div className="bg-gradient-to-r from-green-500 to-emerald-600 rounded-2xl p-5 mb-5">
+
+                <div className="flex items-center gap-2 mb-2">
+
+                  <Award className="h-5 w-5" />
+
+                  <span className="text-sm font-bold">
+
+                    XP Reward
+
+                  </span>
+
+                </div>
+
+                <h2 className="text-3xl font-black">
+
+                  +{lesson.xp}
+
+                </h2>
+
+              </div>
+
+              {/* CHAPTERS */}
+
+              <div className="space-y-3">
+
+                {lesson.sections.map(
+                  (section, index) => (
+
+                    <div
+                      key={index}
+                      className="bg-black/20 rounded-2xl p-4 border border-white/5 hover:border-green-500/30 transition-all"
+                    >
+
+                      <div className="flex items-center justify-between">
+
+                        <p className="text-sm font-semibold">
+
+                          {section.title}
+
+                        </p>
+
+                        <ChevronRight className="h-4 w-4 text-gray-500" />
+
+                      </div>
+
+                    </div>
+                  )
+                )}
+
+              </div>
+
+              {/* QUIZ BUTTON */}
+
+              <Link
+                to="/quizzes"
+                className="mt-5 w-full bg-green-500 hover:bg-green-600 text-white py-3 rounded-2xl text-sm font-bold flex items-center justify-center"
+              >
+
+                Take Quiz
+
+              </Link>
+
+            </div>
+
+          </div>
+
+        </div>
 
       </div>
 

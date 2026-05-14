@@ -12,11 +12,9 @@ import { useAuthStore } from '../../lib/store';
 
 function Leaderboard() {
 
-  const { user } =
-    useAuthStore();
+  const { user } = useAuthStore();
 
   const players = [
-
     {
       name: user?.username || 'You',
       points: user?.points || 1200,
@@ -46,122 +44,120 @@ function Leaderboard() {
       points: 3200,
       rank: 'Green Leader',
     },
-
   ];
 
-  /* SORT HIGHEST POINTS */
+  /* SORT PLAYERS */
+  players.sort((a, b) => b.points - a.points);
 
-  players.sort(
-    (a, b) => b.points - a.points
-  );
-
-  const getMedal = (
-    index: number
-  ) => {
+  const getMedal = (index: number) => {
 
     if (index === 0)
       return (
-        <div className="bg-yellow-500/20 text-yellow-400 p-4 rounded-2xl">
-          <Trophy className="h-8 w-8" />
+        <div className="bg-yellow-500/20 text-yellow-400 p-3 rounded-xl">
+          <Trophy className="h-6 w-6" />
         </div>
       );
 
     if (index === 1)
       return (
-        <div className="bg-gray-400/20 text-gray-300 p-4 rounded-2xl">
-          <Medal className="h-8 w-8" />
+        <div className="bg-gray-400/20 text-gray-300 p-3 rounded-xl">
+          <Medal className="h-6 w-6" />
         </div>
       );
 
     if (index === 2)
       return (
-        <div className="bg-orange-500/20 text-orange-400 p-4 rounded-2xl">
-          <Crown className="h-8 w-8" />
+        <div className="bg-orange-500/20 text-orange-400 p-3 rounded-xl">
+          <Crown className="h-6 w-6" />
         </div>
       );
 
     return (
-      <div className="bg-green-500/10 text-green-400 p-4 rounded-2xl">
-        <Star className="h-8 w-8" />
+      <div className="bg-green-500/10 text-green-400 p-3 rounded-xl">
+        <Star className="h-6 w-6" />
       </div>
     );
   };
 
   return (
 
-    <div className="min-h-screen bg-[#0f172a] px-6 py-14">
+    <div className="min-h-screen bg-[#081120] px-4 md:px-6 py-10">
 
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-5xl mx-auto">
 
         {/* HEADER */}
 
-        <div className="text-center mb-16">
+        <div className="text-center mb-10">
 
-          <div className="flex justify-center mb-6">
+          <div className="flex justify-center mb-4">
 
-            <div className="bg-gradient-to-r from-yellow-500 to-orange-500 p-6 rounded-3xl shadow-2xl">
+            <div className="bg-gradient-to-r from-yellow-500 to-orange-500 p-4 rounded-2xl shadow-lg">
 
-              <Trophy className="h-14 w-14 text-white" />
+              <Trophy className="h-10 w-10 text-white" />
 
             </div>
 
           </div>
 
-          <h1 className="text-5xl font-black text-white">
+          <h1 className="text-3xl md:text-4xl font-bold text-white">
 
-            Global Leaderboard
+            Eco Leaderboard
 
           </h1>
 
-          <p className="text-gray-400 mt-5 text-lg">
+          <p className="text-gray-400 mt-3 text-sm md:text-base">
 
-            Top sustainability champions ranked by eco points 🌍
+            Top sustainability champions 🌍
 
           </p>
 
         </div>
 
-        {/* TOP USER CARD */}
+        {/* USER CARD */}
 
         {user && (
 
-          <div className="mb-12 bg-gradient-to-r from-green-500 to-emerald-600 rounded-[30px] p-8 shadow-[0_20px_80px_rgba(0,0,0,0.5)]">
+          <div className="mb-8 bg-gradient-to-r from-green-500 to-emerald-600 rounded-3xl p-6 shadow-xl">
 
-            <div className="flex items-center justify-between flex-wrap gap-6">
+            <div className="flex items-center justify-between flex-wrap gap-5">
 
               <div>
 
-                <div className="text-green-100 text-sm mb-2">
-                  YOUR CURRENT SCORE
-                </div>
+                <p className="text-green-100 text-xs uppercase tracking-wide">
 
-                <h2 className="text-5xl font-black text-white">
+                  Your Eco Score
+
+                </p>
+
+                <h2 className="text-4xl md:text-5xl font-bold text-white mt-1">
 
                   {user.points}
 
                 </h2>
 
-                <p className="text-green-100 mt-3 text-lg">
+                <p className="text-green-100 mt-2 text-sm">
 
-                  Keep completing quizzes and eco missions 🚀
+                  Keep completing eco challenges 🚀
 
                 </p>
 
               </div>
 
-              <div className="bg-white/10 backdrop-blur-xl border border-white/10 rounded-3xl px-8 py-6">
+              <div className="bg-white/10 backdrop-blur-md border border-white/10 rounded-2xl px-6 py-4">
 
-                <div className="flex items-center gap-3 mb-2">
+                <div className="flex items-center gap-2 mb-2">
 
-                  <Flame className="text-yellow-300" />
+                  <Flame className="text-yellow-300 h-5 w-5" />
 
-                  <span className="text-white font-bold">
-                    Eco Rank
+                  <span className="text-white text-sm font-semibold">
+
+                    Current Rank
+
                   </span>
 
                 </div>
 
-                <div className="text-3xl font-black text-white">
+                <div className="text-2xl font-bold text-white">
 
                   Green Warrior 🌱
 
@@ -177,94 +173,87 @@ function Leaderboard() {
 
         {/* PLAYERS */}
 
-        <div className="space-y-6">
+        <div className="space-y-5">
 
-          {players.map(
-            (player, index) => (
+          {players.map((player, index) => (
 
-              <div
-                key={index}
-                className={`rounded-[30px] p-8 border transition-all duration-300 hover:scale-[1.01]
+            <div
+              key={index}
+              className={`rounded-3xl p-5 border transition-all duration-300 hover:scale-[1.01]
 
-                ${
-                  player.name === user?.username
+              ${
+                player.name === user?.username
+                  ? 'bg-green-500/10 border-green-500/30 shadow-lg'
+                  : 'bg-[#111827] border-white/10'
+              }
+              `}
+            >
 
-                    ? 'bg-green-500/10 border-green-500/30 shadow-[0_20px_60px_rgba(34,197,94,0.15)]'
+              <div className="flex items-center justify-between flex-wrap gap-4">
 
-                    : 'bg-[#111827] border-white/10'
-                }
-                `}
-              >
+                {/* LEFT */}
 
-                <div className="flex items-center justify-between flex-wrap gap-6">
+                <div className="flex items-center gap-4">
 
-                  {/* LEFT */}
+                  {getMedal(index)}
 
-                  <div className="flex items-center gap-6">
+                  <div>
 
-                    {getMedal(index)}
+                    <div className="flex items-center gap-2 flex-wrap">
 
-                    <div>
+                      <h2 className="text-xl md:text-2xl font-bold text-white">
 
-                      <div className="flex items-center gap-3 flex-wrap">
+                        {player.name}
 
-                        <h2 className="text-3xl font-black text-white">
+                      </h2>
 
-                          {player.name}
+                      {player.name === user?.username && (
 
-                        </h2>
+                        <span className="bg-green-500 text-white text-[10px] px-2 py-1 rounded-full font-bold">
 
-                        {player.name === user?.username && (
-
-                          <span className="bg-green-500 text-white text-xs px-3 py-1 rounded-full font-bold">
-
-                            YOU
-
-                          </span>
-
-                        )}
-
-                      </div>
-
-                      <div className="flex items-center gap-2 text-yellow-400 mt-3">
-
-                        <Crown className="h-4 w-4" />
-
-                        <span className="font-semibold">
-
-                          {player.rank}
+                          YOU
 
                         </span>
 
-                      </div>
+                      )}
 
                     </div>
 
-                  </div>
+                    <div className="flex items-center gap-2 text-yellow-400 mt-2 text-sm">
 
-                  {/* RIGHT */}
+                      <Crown className="h-4 w-4" />
 
-                  <div className="text-right">
-
-                    <div className="text-5xl font-black text-green-400">
-
-                      {player.points}
+                      <span>{player.rank}</span>
 
                     </div>
-
-                    <p className="text-gray-400 mt-2">
-
-                      Eco Points
-
-                    </p>
 
                   </div>
 
                 </div>
 
+                {/* RIGHT */}
+
+                <div className="text-right">
+
+                  <div className="text-3xl md:text-4xl font-bold text-green-400">
+
+                    {player.points}
+
+                  </div>
+
+                  <p className="text-gray-400 text-sm mt-1">
+
+                    Eco Points
+
+                  </p>
+
+                </div>
+
               </div>
-            )
-          )}
+
+            </div>
+
+          ))}
 
         </div>
 

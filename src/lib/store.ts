@@ -58,14 +58,20 @@ export const useAuthStore =
     ========================= */
 
     user: JSON.parse(
-      localStorage.getItem('eco_user') || 'null'
+      localStorage.getItem(
+        'eco_user'
+      ) || 'null'
     ),
 
     token:
-      localStorage.getItem('eco_token'),
+      localStorage.getItem(
+        'eco_token'
+      ),
 
     darkMode:
-      localStorage.getItem('eco_dark') === 'true',
+      localStorage.getItem(
+        'eco_dark'
+      ) === 'true',
 
     completedQuizzes: JSON.parse(
       localStorage.getItem(
@@ -74,7 +80,9 @@ export const useAuthStore =
     ),
 
     totalXP: Number(
-      localStorage.getItem('eco_xp') || 0
+      localStorage.getItem(
+        'eco_xp'
+      ) || 0
     ),
 
     leaderboard: JSON.parse(
@@ -87,11 +95,15 @@ export const useAuthStore =
        LOGIN / REGISTER
     ========================= */
 
-    setAuth: (token, user) => {
+    setAuth: (
+      token,
+      user
+    ) => {
 
       const fixedUser = {
         ...user,
-        points: user.points || 1200,
+        points:
+          user.points || 0,
       };
 
       localStorage.setItem(
@@ -101,7 +113,9 @@ export const useAuthStore =
 
       localStorage.setItem(
         'eco_user',
-        JSON.stringify(fixedUser)
+        JSON.stringify(
+          fixedUser
+        )
       );
 
       set({
@@ -136,7 +150,9 @@ export const useAuthStore =
        ADD ECO POINTS
     ========================= */
 
-    addPoints: (points) =>
+    addPoints: (
+      points
+    ) =>
 
       set((state) => {
 
@@ -146,25 +162,73 @@ export const useAuthStore =
         const updatedUser = {
           ...state.user,
           points:
-            state.user.points + points,
+            state.user.points +
+            points,
         };
+
+        const updatedXP =
+          state.totalXP +
+          points;
 
         localStorage.setItem(
           'eco_user',
-          JSON.stringify(updatedUser)
+          JSON.stringify(
+            updatedUser
+          )
         );
 
         localStorage.setItem(
           'eco_xp',
-          String(
-            state.totalXP + points
+          String(updatedXP)
+        );
+
+        /* UPDATE LEADERBOARD */
+
+        let leaderboard =
+          state.leaderboard || [];
+
+        const existing =
+          leaderboard.find(
+            (p) =>
+              p.username ===
+              updatedUser.username
+          );
+
+        if (existing) {
+
+          existing.points =
+            updatedUser.points;
+
+        } else {
+
+          leaderboard.push({
+            username:
+              updatedUser.username,
+            points:
+              updatedUser.points,
+          });
+        }
+
+        leaderboard.sort(
+          (a, b) =>
+            b.points -
+            a.points
+        );
+
+        localStorage.setItem(
+          'eco_leaderboard',
+          JSON.stringify(
+            leaderboard
           )
         );
 
         return {
           user: updatedUser,
+
           totalXP:
-            state.totalXP + points,
+            updatedXP,
+
+          leaderboard,
         };
       }),
 
@@ -182,28 +246,40 @@ export const useAuthStore =
         if (!state.user)
           return state;
 
-        if (
+        const alreadyCompleted =
           state.completedQuizzes.includes(
             quizId
-          )
-        ) {
-          return state;
-        }
+          );
+
+        /* ALWAYS ADD XP */
 
         const updatedUser = {
           ...state.user,
           points:
-            state.user.points + xp,
+            state.user.points +
+            xp,
         };
 
-        const updatedCompleted = [
-          ...state.completedQuizzes,
-          quizId,
-        ];
+        /* SAVE QUIZ ONLY ONCE */
+
+        const updatedCompleted =
+          alreadyCompleted
+            ? state.completedQuizzes
+            : [
+                ...state.completedQuizzes,
+                quizId,
+              ];
+
+        const updatedXP =
+          state.totalXP + xp;
+
+        /* SAVE */
 
         localStorage.setItem(
           'eco_user',
-          JSON.stringify(updatedUser)
+          JSON.stringify(
+            updatedUser
+          )
         );
 
         localStorage.setItem(
@@ -215,8 +291,46 @@ export const useAuthStore =
 
         localStorage.setItem(
           'eco_xp',
-          String(
-            state.totalXP + xp
+          String(updatedXP)
+        );
+
+        /* UPDATE LEADERBOARD */
+
+        let leaderboard =
+          state.leaderboard || [];
+
+        const existing =
+          leaderboard.find(
+            (p) =>
+              p.username ===
+              updatedUser.username
+          );
+
+        if (existing) {
+
+          existing.points =
+            updatedUser.points;
+
+        } else {
+
+          leaderboard.push({
+            username:
+              updatedUser.username,
+            points:
+              updatedUser.points,
+          });
+        }
+
+        leaderboard.sort(
+          (a, b) =>
+            b.points -
+            a.points
+        );
+
+        localStorage.setItem(
+          'eco_leaderboard',
+          JSON.stringify(
+            leaderboard
           )
         );
 
@@ -227,19 +341,22 @@ export const useAuthStore =
             updatedCompleted,
 
           totalXP:
-            state.totalXP + xp,
+            updatedXP,
+
+          leaderboard,
         };
       }),
 
     /* =========================
-       LEADERBOARD
+       UPDATE LEADERBOARD
     ========================= */
 
     updateLeaderboard: () => {
 
       const state = get();
 
-      if (!state.user) return;
+      if (!state.user)
+        return;
 
       let leaderboard =
         state.leaderboard || [];
@@ -268,7 +385,8 @@ export const useAuthStore =
 
       leaderboard.sort(
         (a, b) =>
-          b.points - a.points
+          b.points -
+          a.points
       );
 
       localStorage.setItem(
@@ -293,7 +411,9 @@ export const useAuthStore =
 
         localStorage.setItem(
           'eco_dark',
-          String(!state.darkMode)
+          String(
+            !state.darkMode
+          )
         );
 
         return {

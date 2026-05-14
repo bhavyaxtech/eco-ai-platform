@@ -5,41 +5,30 @@ import {
   BookOpen,
   Trophy,
   Settings,
+  Activity,
+  ArrowUpRight,
 } from 'lucide-react';
 
-import {
-  useAuthStore,
-} from '../../lib/store';
+import { useAuthStore } from '../../lib/store';
 
 function Dashboard() {
 
-  const { user } =
-    useAuthStore();
+  const { user } = useAuthStore();
 
-  // ADMIN CHECK
-
-  if (
-    !user ||
-    user.role !== 'admin'
-  ) {
+  if (!user || user.role !== 'admin') {
 
     return (
 
-      <div className="flex items-center justify-center min-h-[70vh]">
+      <div className="flex items-center justify-center min-h-[70vh] px-6">
 
-        <div className="bg-white dark:bg-slate-900 shadow-xl rounded-3xl p-10 text-center">
+        <div className="bg-white dark:bg-[#111827] border border-gray-200 dark:border-gray-800 shadow-sm rounded-3xl p-10 text-center max-w-md w-full">
 
-          <h1 className="text-3xl font-bold text-red-500">
-
+          <h1 className="text-2xl font-semibold text-red-500">
             Access Denied
-
           </h1>
 
-          <p className="text-gray-500 mt-3">
-
-            You are not authorized
-            to access admin dashboard.
-
+          <p className="text-gray-500 mt-3 text-sm leading-relaxed">
+            You do not have permission to access the admin dashboard.
           </p>
 
         </div>
@@ -48,33 +37,67 @@ function Dashboard() {
     );
   }
 
+  const stats = [
+    {
+      title: 'Total Users',
+      value: '12,480',
+      icon: Users,
+      color: 'text-emerald-500',
+      bg: 'bg-emerald-50 dark:bg-emerald-500/10',
+    },
+
+    {
+      title: 'Lessons',
+      value: '145',
+      icon: BookOpen,
+      color: 'text-blue-500',
+      bg: 'bg-blue-50 dark:bg-blue-500/10',
+    },
+
+    {
+      title: 'Quizzes',
+      value: '320',
+      icon: Trophy,
+      color: 'text-orange-500',
+      bg: 'bg-orange-50 dark:bg-orange-500/10',
+    },
+
+    {
+      title: 'Platform Activity',
+      value: '89%',
+      icon: Activity,
+      color: 'text-purple-500',
+      bg: 'bg-purple-50 dark:bg-purple-500/10',
+    },
+  ];
+
   return (
 
     <div className="max-w-7xl mx-auto px-6 py-10">
 
       {/* HEADER */}
 
-      <div className="flex items-center justify-between mb-10">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-10">
 
         <div>
 
-          <h1 className="text-4xl font-black text-slate-900 dark:text-white">
+          <p className="text-sm text-emerald-500 font-medium mb-2">
+            Admin Panel
+          </p>
 
-            Admin Dashboard
-
+          <h1 className="text-3xl font-semibold text-gray-900 dark:text-white">
+            Dashboard Overview
           </h1>
 
-          <p className="text-gray-500 mt-2">
-
-            Manage platform data and users
-
+          <p className="text-gray-500 mt-2 text-sm">
+            Monitor users, lessons, quizzes, and platform performance.
           </p>
 
         </div>
 
-        <button className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-5 py-3 rounded-2xl transition-all">
+        <button className="flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white px-5 py-3 rounded-2xl transition-all text-sm font-medium shadow-sm">
 
-          <Settings className="h-5 w-5" />
+          <Settings className="h-4 w-4" />
 
           Settings
 
@@ -84,128 +107,91 @@ function Dashboard() {
 
       {/* STATS */}
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
 
-        {/* USERS */}
+        {stats.map((item, index) => {
 
-        <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-xl p-7">
+          const Icon = item.icon;
 
-          <div className="flex items-center justify-between">
+          return (
 
-            <div>
+            <div
+              key={index}
+              className="bg-white dark:bg-[#111827] border border-gray-100 dark:border-gray-800 rounded-3xl p-6 shadow-sm hover:shadow-md transition-all"
+            >
 
-              <p className="text-gray-500">
+              <div className="flex items-center justify-between">
 
-                Total Users
+                <div>
 
-              </p>
+                  <p className="text-sm text-gray-500">
+                    {item.title}
+                  </p>
 
-              <h2 className="text-5xl font-black mt-2 text-green-600">
+                  <h2 className="text-3xl font-semibold mt-3 text-gray-900 dark:text-white">
+                    {item.value}
+                  </h2>
 
-                12K+
+                </div>
 
-              </h2>
+                <div className={`${item.bg} p-4 rounded-2xl`}>
 
-            </div>
+                  <Icon className={`h-6 w-6 ${item.color}`} />
 
-            <div className="bg-green-100 dark:bg-green-900/30 p-4 rounded-2xl">
+                </div>
 
-              <Users className="h-8 w-8 text-green-600" />
+              </div>
 
-            </div>
+              <div className="flex items-center gap-2 mt-6 text-emerald-500 text-sm font-medium">
 
-          </div>
+                <ArrowUpRight className="h-4 w-4" />
 
-        </div>
+                +12% this month
 
-        {/* LESSONS */}
-
-        <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-xl p-7">
-
-          <div className="flex items-center justify-between">
-
-            <div>
-
-              <p className="text-gray-500">
-
-                Lessons
-
-              </p>
-
-              <h2 className="text-5xl font-black mt-2 text-blue-600">
-
-                145
-
-              </h2>
+              </div>
 
             </div>
-
-            <div className="bg-blue-100 dark:bg-blue-900/30 p-4 rounded-2xl">
-
-              <BookOpen className="h-8 w-8 text-blue-600" />
-
-            </div>
-
-          </div>
-
-        </div>
-
-        {/* QUIZZES */}
-
-        <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-xl p-7">
-
-          <div className="flex items-center justify-between">
-
-            <div>
-
-              <p className="text-gray-500">
-
-                Quizzes
-
-              </p>
-
-              <h2 className="text-5xl font-black mt-2 text-yellow-500">
-
-                320
-
-              </h2>
-
-            </div>
-
-            <div className="bg-yellow-100 dark:bg-yellow-900/30 p-4 rounded-2xl">
-
-              <Trophy className="h-8 w-8 text-yellow-500" />
-
-            </div>
-
-          </div>
-
-        </div>
+          );
+        })}
 
       </div>
 
       {/* RECENT USERS */}
 
-      <div className="mt-10 bg-white dark:bg-slate-900 rounded-3xl shadow-xl p-8">
+      <div className="mt-10 bg-white dark:bg-[#111827] border border-gray-100 dark:border-gray-800 rounded-3xl shadow-sm p-8">
 
-        <h2 className="text-2xl font-bold mb-6 dark:text-white">
+        <div className="flex items-center justify-between mb-8">
 
-          Recent Users
+          <div>
 
-        </h2>
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+              Recent Users
+            </h2>
+
+            <p className="text-sm text-gray-500 mt-1">
+              New users who joined recently
+            </p>
+
+          </div>
+
+          <button className="text-sm text-emerald-500 hover:text-emerald-600 font-medium">
+            View All
+          </button>
+
+        </div>
 
         <div className="space-y-5">
 
-          {[1, 2, 3].map((item) => (
+          {[1, 2, 3, 4].map((item) => (
 
             <div
               key={item}
-              className="flex items-center justify-between border-b border-gray-200 dark:border-slate-700 pb-4"
+              className="flex items-center justify-between border-b border-gray-100 dark:border-gray-800 pb-5"
             >
 
               <div className="flex items-center gap-4">
 
-                <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center font-bold text-green-600">
+                <div className="w-12 h-12 rounded-2xl bg-emerald-100 dark:bg-emerald-500/10 flex items-center justify-center text-emerald-600 font-semibold">
 
                   U
 
@@ -213,26 +199,20 @@ function Dashboard() {
 
                 <div>
 
-                  <h3 className="font-semibold dark:text-white">
-
+                  <h3 className="font-medium text-gray-900 dark:text-white">
                     Eco User {item}
-
                   </h3>
 
-                  <p className="text-gray-500 text-sm">
-
+                  <p className="text-sm text-gray-500">
                     eco{item}@gmail.com
-
                   </p>
 
                 </div>
 
               </div>
 
-              <span className="text-sm text-gray-400">
-
+              <span className="text-xs bg-gray-100 dark:bg-gray-800 px-3 py-2 rounded-xl text-gray-500">
                 Joined Today
-
               </span>
 
             </div>

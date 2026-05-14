@@ -15,12 +15,7 @@ import {
   User,
   Menu,
   X,
-  Bell,
-  Flame,
   LayoutDashboard,
-  Mic,
-  FileText,
-  Calculator,
 } from 'lucide-react';
 
 import { motion } from 'framer-motion';
@@ -79,65 +74,39 @@ function Navbar() {
     },
   ];
 
-  const aiLinks = [
-    {
-      name: 'AI Chat',
-      path: '/ai-chat',
-      icon: Bot,
-    },
-
-    {
-      name: 'Voice AI',
-      path: '/voice-ai',
-      icon: Mic,
-    },
-
-    {
-      name: 'AI Reports',
-      path: '/ai-reports',
-      icon: FileText,
-    },
-
-    {
-      name: 'Carbon AI',
-      path: '/carbon-calculator',
-      icon: Calculator,
-    },
-  ];
-
   return (
 
-    <header className="fixed top-0 left-0 w-full z-50 border-b border-white/10 bg-[#07140d]/90 backdrop-blur-2xl">
+    <header className="fixed top-0 left-0 w-full z-50 border-b border-white/5 bg-[#071018]/90 backdrop-blur-xl">
 
-      <div className="max-w-7xl mx-auto px-6 h-[85px] flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-6 h-[74px] flex items-center justify-between">
 
         {/* LOGO */}
 
         <Link
           to="/"
-          className="flex items-center gap-4"
+          className="flex items-center gap-3"
         >
 
           <motion.div
             whileHover={{ rotate: 8 }}
-            className="h-14 w-14 rounded-3xl bg-gradient-to-br from-green-400 via-emerald-500 to-green-700 flex items-center justify-center shadow-[0_0_30px_rgba(34,197,94,0.5)]"
+            className="h-11 w-11 rounded-2xl bg-gradient-to-br from-emerald-400 to-green-600 flex items-center justify-center shadow-lg"
           >
 
-            <Leaf className="h-7 w-7 text-white" />
+            <Leaf className="h-5 w-5 text-white" />
 
           </motion.div>
 
           <div>
 
-            <h1 className="text-3xl font-black text-white tracking-tight">
+            <h1 className="text-xl font-bold text-white tracking-tight">
 
               EcoLearn AI
 
             </h1>
 
-            <p className="text-xs text-green-300">
+            <p className="text-[11px] text-emerald-300">
 
-              Sustainability Intelligence Platform
+              Sustainability Platform
 
             </p>
 
@@ -147,7 +116,7 @@ function Navbar() {
 
         {/* DESKTOP NAV */}
 
-        <nav className="hidden xl:flex items-center gap-3">
+        <nav className="hidden lg:flex items-center gap-2">
 
           {links.map((item, index) => {
 
@@ -158,12 +127,12 @@ function Navbar() {
               <Link
                 key={index}
                 to={item.path}
-                className={`px-5 py-3 rounded-2xl flex items-center gap-2 text-sm font-semibold transition-all duration-300
+                className={`px-4 py-2.5 rounded-xl flex items-center gap-2 text-sm font-medium transition-all duration-300
 
                 ${
                   location.pathname === item.path
-                    ? 'bg-green-500 text-white shadow-lg shadow-green-500/30'
-                    : 'text-gray-300 hover:bg-white/10 hover:text-white'
+                    ? 'bg-emerald-500 text-white'
+                    : 'text-gray-300 hover:bg-white/5 hover:text-white'
                 }
                 `}
               >
@@ -178,54 +147,18 @@ function Navbar() {
 
         </nav>
 
-        {/* RIGHT */}
+        {/* RIGHT SIDE */}
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
 
-          {/* ECO POINTS */}
-
-          {user && (
-
-            <div className="hidden md:flex items-center gap-3 bg-white/5 border border-white/10 px-5 py-3 rounded-2xl">
-
-              <div className="bg-green-500/20 p-2 rounded-xl">
-
-                <Flame className="text-green-400 h-5 w-5" />
-
-              </div>
-
-              <div>
-
-                <p className="text-xs text-gray-400">
-                  Eco Points
-                </p>
-
-                <p className="text-white font-bold">
-                  {user.points}
-                </p>
-
-              </div>
-
-            </div>
-
-          )}
-
-          {/* NOTIFICATION */}
-
-          <button className="hidden md:flex h-12 w-12 rounded-2xl bg-white/5 border border-white/10 items-center justify-center text-gray-300 hover:bg-white/10 transition-all">
-
-            <Bell className="h-5 w-5" />
-
-          </button>
-
-          {/* AI ASSISTANT */}
+          {/* AI BUTTON */}
 
           <Link
             to="/ai-chat"
-            className="bg-gradient-to-r from-green-500 to-emerald-600 hover:scale-105 transition-all duration-300 text-white px-6 py-3 rounded-2xl font-bold flex items-center gap-2 shadow-[0_0_30px_rgba(34,197,94,0.35)]"
+            className="hidden md:flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 transition-all text-white px-5 py-2.5 rounded-xl font-medium shadow-lg"
           >
 
-            <Bot className="h-5 w-5" />
+            <Bot className="h-4 w-4" />
 
             AI Assistant
 
@@ -240,16 +173,18 @@ function Navbar() {
                 logout();
                 navigate('/login');
               }}
-              className="hidden md:block bg-red-500/10 hover:bg-red-500 hover:text-white border border-red-500/20 text-red-300 px-5 py-3 rounded-2xl font-semibold transition-all"
+              className="hidden md:flex items-center gap-2 border border-red-500/20 bg-red-500/10 hover:bg-red-500 hover:text-white text-red-300 px-4 py-2.5 rounded-xl text-sm font-medium transition-all"
             >
+
               Logout
+
             </button>
 
           ) : (
 
             <Link
               to="/login"
-              className="hidden md:flex border border-white/10 bg-white/5 hover:bg-white/10 text-white px-5 py-3 rounded-2xl font-semibold transition-all duration-300 items-center gap-2"
+              className="hidden md:flex items-center gap-2 border border-white/10 bg-white/5 hover:bg-white/10 text-white px-4 py-2.5 rounded-xl text-sm font-medium transition-all"
             >
 
               <Sparkles className="h-4 w-4" />
@@ -266,7 +201,7 @@ function Navbar() {
             onClick={() =>
               setMobileOpen(!mobileOpen)
             }
-            className="xl:hidden h-12 w-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-white"
+            className="lg:hidden h-11 w-11 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white"
           >
 
             {mobileOpen ? (
@@ -281,15 +216,13 @@ function Navbar() {
 
       </div>
 
-      {/* MOBILE NAV */}
+      {/* MOBILE MENU */}
 
       {mobileOpen && (
 
-        <div className="xl:hidden px-6 pb-6">
+        <div className="lg:hidden px-6 pb-6">
 
-          <div className="bg-[#0d1d15] border border-white/10 rounded-3xl p-5 space-y-3">
-
-            {/* MAIN LINKS */}
+          <div className="bg-[#0d1720] border border-white/10 rounded-2xl p-4 space-y-2">
 
             {links.map((item, index) => {
 
@@ -303,12 +236,12 @@ function Navbar() {
                   onClick={() =>
                     setMobileOpen(false)
                   }
-                  className={`flex items-center gap-3 px-4 py-4 rounded-2xl transition-all
+                  className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all
 
                   ${
                     location.pathname === item.path
-                      ? 'bg-green-500 text-white'
-                      : 'text-gray-300 hover:bg-white/10'
+                      ? 'bg-emerald-500 text-white'
+                      : 'text-gray-300 hover:bg-white/5'
                   }
                   `}
                 >
@@ -321,42 +254,16 @@ function Navbar() {
               );
             })}
 
-            {/* AI FEATURES */}
+            <Link
+              to="/ai-chat"
+              className="flex items-center gap-3 px-4 py-3 rounded-xl bg-emerald-500 text-white"
+            >
 
-            <div className="border-t border-white/10 pt-4 mt-4">
+              <Bot className="h-5 w-5" />
 
-              <p className="text-sm text-gray-400 mb-3 px-2">
+              AI Assistant
 
-                AI Features
-
-              </p>
-
-              {aiLinks.map((item, index) => {
-
-                const Icon = item.icon;
-
-                return (
-
-                  <Link
-                    key={index}
-                    to={item.path}
-                    onClick={() =>
-                      setMobileOpen(false)
-                    }
-                    className="flex items-center gap-3 px-4 py-4 rounded-2xl text-gray-300 hover:bg-white/10 transition-all"
-                  >
-
-                    <Icon className="h-5 w-5 text-green-400" />
-
-                    {item.name}
-
-                  </Link>
-                );
-              })}
-
-            </div>
-
-            {/* LOGIN / LOGOUT */}
+            </Link>
 
             {user ? (
 
@@ -365,18 +272,22 @@ function Navbar() {
                   logout();
                   navigate('/login');
                 }}
-                className="w-full mt-3 bg-red-500 text-white py-4 rounded-2xl font-bold"
+                className="w-full mt-3 bg-red-500 text-white py-3 rounded-xl font-medium"
               >
+
                 Logout
+
               </button>
 
             ) : (
 
               <Link
                 to="/login"
-                className="block text-center mt-3 bg-green-500 text-white py-4 rounded-2xl font-bold"
+                className="block text-center mt-3 bg-emerald-500 text-white py-3 rounded-xl font-medium"
               >
+
                 Login
+
               </Link>
 
             )}

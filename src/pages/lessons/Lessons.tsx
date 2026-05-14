@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import {
   BookOpen,
-  Clock,
-  Tag,
+  Clock3,
   ArrowRight,
+  Search,
 } from 'lucide-react';
 
 import { motion } from 'framer-motion';
@@ -16,33 +16,30 @@ const lessons = [
     id: 1,
     title: 'Introduction to Sustainability',
     description:
-      'Learn the core concepts of sustainability and environmental protection.',
-    category: 'Fundamentals',
-    duration: '30 mins',
-    level: 'Beginner',
-    color: 'from-green-500 to-emerald-600',
+      'Core sustainability concepts and environmental awareness.',
+    category: 'Beginner',
+    duration: '30 min',
+    color: 'bg-emerald-500',
   },
 
   {
     id: 2,
     title: 'Waste Management',
     description:
-      'Understand recycling, waste reduction, and smart disposal practices.',
-    category: 'Practical Skills',
-    duration: '45 mins',
-    level: 'Intermediate',
-    color: 'from-blue-500 to-cyan-600',
+      'Learn recycling, waste reduction, and smart disposal.',
+    category: 'Intermediate',
+    duration: '45 min',
+    color: 'bg-cyan-500',
   },
 
   {
     id: 3,
     title: 'Biodiversity Conservation',
     description:
-      'Explore ecosystems, wildlife conservation, and biodiversity protection.',
-    category: 'Advanced Topics',
-    duration: '60 mins',
-    level: 'Advanced',
-    color: 'from-purple-500 to-pink-600',
+      'Understand ecosystems and biodiversity protection.',
+    category: 'Advanced',
+    duration: '60 min',
+    color: 'bg-violet-500',
   },
 ];
 
@@ -50,111 +47,162 @@ function Lessons() {
 
   const navigate = useNavigate();
 
-  const openLesson = (id: number) => {
-    navigate(`/lesson/${id}`);
-  };
+  const [search, setSearch] = useState('');
+
+  const filteredLessons = lessons.filter((lesson) =>
+    lesson.title.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
 
-    <div className="min-h-screen px-6 py-12 bg-gradient-to-b from-[#f4fff7] to-[#ecfff4]">
+    <div className="min-h-screen bg-[#071018] text-white px-6 py-10">
 
-      {/* HEADER */}
+      <div className="max-w-7xl mx-auto">
 
-      <div className="text-center mb-14">
+        {/* HEADER */}
 
-        <h1 className="text-5xl font-black text-slate-900 mb-4">
-          Eco Learning Hub
-        </h1>
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 mb-10">
 
-        <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-          Interactive environmental lessons designed to help students
-          build sustainable habits and protect our planet.
-        </p>
+          <div>
 
-      </div>
+            <p className="text-emerald-400 text-sm font-semibold mb-2">
 
-      {/* LESSON CARDS */}
+              Learning Platform
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+            </p>
 
-        {lessons.map((lesson) => (
+            <h1 className="text-3xl md:text-4xl font-bold tracking-tight">
 
-          <motion.div
-            key={lesson.id}
-            whileHover={{ y: -8 }}
-            transition={{ duration: 0.3 }}
-            className="bg-white rounded-3xl overflow-hidden shadow-xl border border-green-100"
-          >
+              Eco Learning Hub
 
-            {/* TOP */}
+            </h1>
 
-            <div className={`bg-gradient-to-r ${lesson.color} p-6 text-white`}>
+            <p className="text-gray-400 mt-3 max-w-2xl text-sm md:text-base">
 
-              <div className="w-16 h-16 rounded-2xl bg-white/20 flex items-center justify-center mb-5">
+              Explore interactive sustainability lessons designed for modern environmental education.
 
-                <BookOpen className="h-8 w-8" />
+            </p>
+
+          </div>
+
+          {/* SEARCH */}
+
+          <div className="relative w-full lg:w-[320px]">
+
+            <Search className="absolute left-4 top-3.5 h-4 w-4 text-gray-400" />
+
+            <input
+              type="text"
+              placeholder="Search lessons..."
+              value={search}
+              onChange={(e) =>
+                setSearch(e.target.value)
+              }
+              className="w-full bg-white/5 border border-white/10 rounded-2xl pl-11 pr-4 py-3 text-sm outline-none focus:border-emerald-400 transition-all"
+            />
+
+          </div>
+
+        </div>
+
+        {/* FILTERS */}
+
+        <div className="flex flex-wrap gap-3 mb-10">
+
+          {['All', 'Beginner', 'Intermediate', 'Advanced'].map((item) => (
+
+            <button
+              key={item}
+              className="px-5 py-2.5 rounded-xl bg-white/5 border border-white/10 hover:bg-emerald-500 hover:border-emerald-500 transition-all text-sm"
+            >
+
+              {item}
+
+            </button>
+
+          ))}
+
+        </div>
+
+        {/* CARDS */}
+
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+
+          {filteredLessons.map((lesson) => (
+
+            <motion.div
+              key={lesson.id}
+              whileHover={{ y: -4 }}
+              transition={{ duration: 0.2 }}
+              className="bg-[#0d1721] border border-white/5 rounded-3xl overflow-hidden hover:border-emerald-500/30 transition-all"
+            >
+
+              {/* TOP */}
+
+              <div className="p-6">
+
+                <div className={`w-12 h-12 rounded-2xl ${lesson.color} flex items-center justify-center mb-5`}>
+
+                  <BookOpen className="h-5 w-5 text-white" />
+
+                </div>
+
+                <div className="flex items-center justify-between mb-4">
+
+                  <span className="text-xs px-3 py-1 rounded-full bg-white/5 border border-white/10 text-gray-300">
+
+                    {lesson.category}
+
+                  </span>
+
+                  <div className="flex items-center gap-1 text-gray-400 text-sm">
+
+                    <Clock3 className="h-4 w-4" />
+
+                    {lesson.duration}
+
+                  </div>
+
+                </div>
+
+                <h2 className="text-xl font-semibold mb-3 leading-snug">
+
+                  {lesson.title}
+
+                </h2>
+
+                <p className="text-gray-400 text-sm leading-relaxed">
+
+                  {lesson.description}
+
+                </p>
 
               </div>
 
-              <h2 className="text-2xl font-black mb-2">
-                {lesson.title}
-              </h2>
+              {/* FOOTER */}
 
-              <p className="text-white/90 text-sm leading-relaxed">
-                {lesson.description}
-              </p>
+              <div className="px-6 pb-6 pt-2">
 
-            </div>
+                <button
+                  onClick={() =>
+                    navigate(`/lesson/${lesson.id}`)
+                  }
+                  className="w-full bg-emerald-500 hover:bg-emerald-600 text-white py-3 rounded-2xl font-medium text-sm flex items-center justify-center gap-2 transition-all"
+                >
 
-            {/* CONTENT */}
+                  Open Lesson
 
-            <div className="p-6">
+                  <ArrowRight className="h-4 w-4" />
 
-              <div className="space-y-4">
-
-                <div className="flex items-center gap-3 text-gray-700">
-
-                  <Tag className="h-5 w-5 text-green-600" />
-
-                  <span>{lesson.category}</span>
-
-                </div>
-
-                <div className="flex items-center gap-3 text-gray-700">
-
-                  <Clock className="h-5 w-5 text-green-600" />
-
-                  <span>{lesson.duration}</span>
-
-                </div>
-
-                <div className="flex items-center gap-3 text-gray-700">
-
-                  <BookOpen className="h-5 w-5 text-green-600" />
-
-                  <span>{lesson.level}</span>
-
-                </div>
+                </button>
 
               </div>
 
-              {/* BUTTON */}
+            </motion.div>
 
-              <button
-                onClick={() => openLesson(lesson.id)}
-                className="mt-8 w-full bg-slate-900 hover:bg-black text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-2 transition-all duration-300 hover:scale-[1.02]"
-              >
+          ))}
 
-                Start Learning
-
-                <ArrowRight className="h-5 w-5" />
-
-              </button>
-
-            </div>
-
-          </motion.div>
-        ))}
+        </div>
 
       </div>
 

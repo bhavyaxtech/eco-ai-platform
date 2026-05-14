@@ -102,14 +102,14 @@ function App() {
 
                 {/* AI FEATURES */}
 
-                <Route
-                  path="/ai-chat"
-                  element={
-                    <ProtectedRoute>
-                      <AIAssistant />
-                    </ProtectedRoute>
-                  }
-                />
+               <Route
+  path="/ai-assistant"
+  element={
+    <ProtectedRoute>
+      <AIAssistant />
+    </ProtectedRoute>
+  }
+/>
 
                 <Route
                   path="/ai-reports"

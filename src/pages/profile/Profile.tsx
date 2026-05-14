@@ -61,37 +61,31 @@ function Profile() {
       points:
         Math.floor(user.points * 0.2),
     },
-
     {
       day: 'Tue',
       points:
         Math.floor(user.points * 0.35),
     },
-
     {
       day: 'Wed',
       points:
         Math.floor(user.points * 0.48),
     },
-
     {
       day: 'Thu',
       points:
         Math.floor(user.points * 0.62),
     },
-
     {
       day: 'Fri',
       points:
         Math.floor(user.points * 0.74),
     },
-
     {
       day: 'Sat',
       points:
         Math.floor(user.points * 0.88),
     },
-
     {
       day: 'Sun',
       points: user.points,
@@ -106,7 +100,6 @@ function Profile() {
       color:
         'from-yellow-500 to-orange-500',
     },
-
     {
       title: 'Challenges',
       value: Math.floor(
@@ -116,7 +109,6 @@ function Profile() {
       color:
         'from-green-500 to-emerald-500',
     },
-
     {
       title: 'Quizzes',
       value:
@@ -125,7 +117,6 @@ function Profile() {
       color:
         'from-blue-500 to-cyan-500',
     },
-
     {
       title: 'Day Streak',
       value: streak,
@@ -137,11 +128,11 @@ function Profile() {
 
   return (
 
-    <div className="min-h-screen bg-[#f7fff9] dark:bg-slate-950 px-4 md:px-8 py-10">
+    <div className="min-h-screen bg-[#071226] px-4 md:px-6 py-8">
 
-      <div className="max-w-7xl mx-auto space-y-10">
+      <div className="max-w-6xl mx-auto space-y-8">
 
-        {/* HERO PROFILE */}
+        {/* HERO */}
 
         <motion.div
           initial={{
@@ -152,27 +143,20 @@ function Profile() {
             opacity: 1,
             y: 0,
           }}
-          transition={{
-            duration: 0.6,
-          }}
-          className="relative overflow-hidden rounded-[40px] bg-gradient-to-br from-green-500 via-emerald-600 to-teal-600 p-10 text-white shadow-[0_20px_80px_rgba(16,185,129,0.35)]"
+          className="relative overflow-hidden rounded-[32px] bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 p-8 text-white shadow-[0_20px_80px_rgba(16,185,129,0.25)]"
         >
 
-          {/* BLUR EFFECTS */}
+          <div className="absolute top-0 right-0 w-80 h-80 bg-white/10 rounded-full blur-[120px]" />
 
-          <div className="absolute top-0 right-0 w-72 h-72 bg-white/10 rounded-full blur-[100px]" />
-
-          <div className="absolute bottom-0 left-0 w-72 h-72 bg-black/10 rounded-full blur-[120px]" />
-
-          <div className="relative flex flex-col lg:flex-row lg:items-center lg:justify-between gap-10">
+          <div className="relative flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
 
             {/* LEFT */}
 
             <div className="flex items-center gap-6">
 
-              <div className="bg-white/20 backdrop-blur-xl p-6 rounded-full border border-white/20">
+              <div className="bg-white/20 p-6 rounded-full border border-white/20">
 
-                <User className="h-16 w-16" />
+                <User className="h-14 w-14" />
 
               </div>
 
@@ -180,13 +164,13 @@ function Profile() {
 
                 <div className="flex items-center gap-3 flex-wrap">
 
-                  <h1 className="text-5xl font-black">
+                  <h1 className="text-4xl font-black">
 
                     {user.username}
 
                   </h1>
 
-                  <span className="bg-white/20 px-4 py-1 rounded-full text-sm font-bold border border-white/20">
+                  <span className="bg-white/20 px-4 py-1 rounded-full text-sm font-semibold">
 
                     {getRank()}
 
@@ -194,51 +178,51 @@ function Profile() {
 
                 </div>
 
-                <p className="text-green-100 text-lg mt-3">
+                <p className="text-green-100 mt-2">
 
                   {user.email}
 
                 </p>
 
-                <div className="flex items-center gap-4 mt-6 flex-wrap">
+                <div className="flex gap-4 mt-6 flex-wrap">
 
-                  <div className="bg-white/10 px-5 py-3 rounded-2xl backdrop-blur-lg">
+                  <div className="bg-white/10 px-5 py-3 rounded-2xl">
 
                     <p className="text-sm text-green-100">
                       Level
                     </p>
 
-                    <h3 className="text-2xl font-black">
+                    <h2 className="text-2xl font-bold">
                       {level}
-                    </h3>
+                    </h2>
 
                   </div>
 
-                  <div className="bg-white/10 px-5 py-3 rounded-2xl backdrop-blur-lg">
+                  <div className="bg-white/10 px-5 py-3 rounded-2xl">
 
                     <p className="text-sm text-green-100">
                       XP
                     </p>
 
-                    <h3 className="text-2xl font-black">
+                    <h2 className="text-2xl font-bold">
                       {totalXP}
-                    </h3>
+                    </h2>
 
                   </div>
 
-                  <div className="bg-white/10 px-5 py-3 rounded-2xl backdrop-blur-lg">
+                  <div className="bg-white/10 px-5 py-3 rounded-2xl">
 
                     <p className="text-sm text-green-100">
                       Rank
                     </p>
 
-                    <h3 className="text-2xl font-black">
+                    <h2 className="text-2xl font-bold">
                       #{Math.max(
                         1,
                         100 -
                           completedQuizzes.length
                       )}
-                    </h3>
+                    </h2>
 
                   </div>
 
@@ -250,32 +234,40 @@ function Profile() {
 
             {/* RIGHT */}
 
-            <div className="grid grid-cols-2 gap-5">
+            <div className="grid grid-cols-2 gap-4">
 
-              <div className="bg-white/10 backdrop-blur-xl p-6 rounded-3xl border border-white/20">
+              <div className="bg-white/10 backdrop-blur-xl p-6 rounded-3xl border border-white/10">
 
-                <Sparkles className="h-10 w-10 mb-4" />
+                <Sparkles className="h-8 w-8 mb-4" />
 
                 <h2 className="text-4xl font-black">
+
                   {user.points}
+
                 </h2>
 
                 <p className="text-green-100 mt-2">
+
                   Eco Score
+
                 </p>
 
               </div>
 
-              <div className="bg-white/10 backdrop-blur-xl p-6 rounded-3xl border border-white/20">
+              <div className="bg-white/10 backdrop-blur-xl p-6 rounded-3xl border border-white/10">
 
-                <Target className="h-10 w-10 mb-4" />
+                <Target className="h-8 w-8 mb-4" />
 
                 <h2 className="text-4xl font-black">
+
                   {completedQuizzes.length}
+
                 </h2>
 
                 <p className="text-green-100 mt-2">
+
                   Goals Completed
+
                 </p>
 
               </div>
@@ -295,42 +287,27 @@ function Profile() {
 
               <motion.div
                 key={index}
-                initial={{
-                  opacity: 0,
-                  y: 20,
-                }}
-                animate={{
-                  opacity: 1,
-                  y: 0,
-                }}
-                transition={{
-                  delay: index * 0.1,
-                }}
                 whileHover={{
-                  y: -8,
+                  y: -5,
                 }}
-                className="relative overflow-hidden bg-white dark:bg-slate-900 rounded-[30px] p-7 shadow-xl border border-gray-100 dark:border-slate-800"
+                className="bg-[#0f172a] border border-white/10 rounded-[28px] p-6 shadow-xl"
               >
 
                 <div
-                  className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br ${item.color} opacity-10 rounded-full blur-3xl`}
-                />
-
-                <div
-                  className={`bg-gradient-to-r ${item.color} w-16 h-16 rounded-2xl flex items-center justify-center text-white shadow-lg`}
+                  className={`bg-gradient-to-r ${item.color} w-14 h-14 rounded-2xl flex items-center justify-center text-white`}
                 >
 
-                  <item.icon className="h-8 w-8" />
+                  <item.icon className="h-7 w-7" />
 
                 </div>
 
-                <h2 className="text-5xl font-black mt-6 text-slate-900 dark:text-white">
+                <h2 className="text-4xl font-black text-white mt-5">
 
                   {item.value}
 
                 </h2>
 
-                <p className="text-gray-500 mt-3 text-lg">
+                <p className="text-gray-400 mt-2">
 
                   {item.title}
 
@@ -344,48 +321,39 @@ function Profile() {
 
         {/* CHART + XP */}
 
-        <div className="grid lg:grid-cols-3 gap-8">
+        <div className="grid lg:grid-cols-3 gap-6">
 
           {/* CHART */}
 
-          <motion.div
-            initial={{
-              opacity: 0,
-              y: 30,
-            }}
-            animate={{
-              opacity: 1,
-              y: 0,
-            }}
-            className="lg:col-span-2 bg-white dark:bg-slate-900 rounded-[35px] p-8 shadow-2xl border border-gray-100 dark:border-slate-800"
-          >
+          <div className="lg:col-span-2 bg-[#0f172a] rounded-[30px] p-7 border border-white/10 shadow-xl">
 
-            <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center justify-between mb-6">
 
               <div>
 
-                <h2 className="text-3xl font-black text-slate-900 dark:text-white">
+                <h2 className="text-2xl font-black text-white">
 
                   Weekly Progress 📈
 
                 </h2>
 
-                <p className="text-gray-500 mt-2">
+                <p className="text-gray-400 mt-1">
 
-                  Your sustainability growth
+                  Sustainability growth
+
                 </p>
 
               </div>
 
-              <div className="bg-green-100 dark:bg-green-900/30 p-4 rounded-2xl">
+              <div className="bg-green-500/20 p-3 rounded-2xl">
 
-                <TrendingUp className="text-green-600 h-7 w-7" />
+                <TrendingUp className="text-green-400 h-6 w-6" />
 
               </div>
 
             </div>
 
-            <div className="h-[320px]">
+            <div className="h-[280px]">
 
               <ResponsiveContainer>
 
@@ -417,14 +385,17 @@ function Profile() {
 
                   </defs>
 
-                  <XAxis dataKey="day" />
+                  <XAxis
+                    dataKey="day"
+                    stroke="#94a3b8"
+                  />
 
                   <Tooltip />
 
                   <Area
                     type="monotone"
                     dataKey="points"
-                    stroke="#16a34a"
+                    stroke="#22c55e"
                     fillOpacity={1}
                     fill="url(#colorPoints)"
                     strokeWidth={4}
@@ -436,130 +407,102 @@ function Profile() {
 
             </div>
 
-          </motion.div>
+          </div>
 
           {/* XP CARD */}
 
-          <motion.div
-            initial={{
-              opacity: 0,
-              scale: 0.95,
-            }}
-            animate={{
-              opacity: 1,
-              scale: 1,
-            }}
-            className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-[35px] p-8 text-white shadow-2xl relative overflow-hidden"
-          >
+          <div className="bg-gradient-to-br from-[#111827] to-[#0f172a] rounded-[30px] p-7 text-white border border-white/10 shadow-xl">
 
-            <div className="absolute top-0 right-0 w-60 h-60 bg-green-500/20 rounded-full blur-[120px]" />
+            <div className="bg-green-500/20 w-16 h-16 rounded-2xl flex items-center justify-center mb-6">
 
-            <div className="relative">
+              <Star className="h-8 w-8 text-green-400" />
 
-              <div className="bg-green-500/20 w-20 h-20 rounded-3xl flex items-center justify-center mb-8">
+            </div>
 
-                <Star className="h-10 w-10 text-green-400" />
+            <h2 className="text-2xl font-black">
+
+              Total XP
+
+            </h2>
+
+            <div className="text-6xl font-black text-green-400 mt-6">
+
+              {totalXP}
+
+            </div>
+
+            <p className="text-gray-400 mt-5 leading-relaxed">
+
+              Complete more eco missions and quizzes to level up faster.
+
+            </p>
+
+            <div className="mt-8">
+
+              <div className="flex justify-between text-sm mb-2">
+
+                <span>
+                  Next Level
+                </span>
+
+                <span>
+                  {user.points % 200}/200
+                </span>
 
               </div>
 
-              <h2 className="text-3xl font-black leading-tight">
+              <div className="w-full bg-slate-700 rounded-full h-3 overflow-hidden">
 
-                Total XP Earned
-              </h2>
-
-              <div className="text-7xl font-black mt-8 text-green-400">
-
-                {totalXP}
-
-              </div>
-
-              <p className="text-slate-300 mt-6 leading-relaxed">
-
-                Continue completing quizzes and eco missions to unlock new achievements and sustainability ranks.
-
-              </p>
-
-              <div className="mt-10 space-y-5">
-
-                <div>
-
-                  <div className="flex justify-between text-sm mb-2">
-
-                    <span>
-                      Next Level
-                    </span>
-
-                    <span>
-                      {user.points % 200}/200
-                    </span>
-
-                  </div>
-
-                  <div className="w-full bg-slate-700 rounded-full h-4 overflow-hidden">
-
-                    <div
-                      className="bg-gradient-to-r from-green-400 to-emerald-500 h-4 rounded-full"
-                      style={{
-                        width: `${(user.points % 200) / 2}%`,
-                      }}
-                    />
-
-                  </div>
-
-                </div>
+                <div
+                  className="bg-gradient-to-r from-green-400 to-emerald-500 h-3 rounded-full"
+                  style={{
+                    width: `${(user.points % 200) / 2}%`,
+                  }}
+                />
 
               </div>
 
             </div>
 
-          </motion.div>
+          </div>
 
         </div>
 
-        {/* ENVIRONMENTAL IMPACT */}
+        {/* IMPACT */}
 
-        <motion.div
-          initial={{
-            opacity: 0,
-            y: 30,
-          }}
-          animate={{
-            opacity: 1,
-            y: 0,
-          }}
-          className="bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 rounded-[40px] p-10 text-white shadow-[0_20px_80px_rgba(16,185,129,0.35)]"
-        >
+        <div className="bg-gradient-to-r from-green-600 to-emerald-600 rounded-[32px] p-8 text-white shadow-[0_20px_80px_rgba(16,185,129,0.25)]">
 
-          <div className="flex items-center gap-4 mb-10">
+          <div className="flex items-center gap-4 mb-8">
 
-            <div className="bg-white/20 p-5 rounded-3xl">
+            <div className="bg-white/20 p-4 rounded-2xl">
 
-              <Activity className="h-10 w-10" />
+              <Activity className="h-8 w-8" />
 
             </div>
 
             <div>
 
-              <h2 className="text-4xl font-black">
+              <h2 className="text-3xl font-black">
 
-                Your Environmental Impact 🌍
+                Environmental Impact 🌍
 
               </h2>
 
-              <p className="text-green-100 mt-2 text-lg">
+              <p className="text-green-100 mt-1">
 
-                Real-world positive contributions
+                Your eco contribution
+
               </p>
 
             </div>
 
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-3 gap-6">
 
-            <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-8 border border-white/20">
+            <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-6">
 
-              <h3 className="text-6xl font-black">
+              <h3 className="text-5xl font-black">
 
                 {Math.floor(
                   user.points / 10
@@ -567,7 +510,7 @@ function Profile() {
 
               </h3>
 
-              <p className="text-green-100 mt-3 text-lg">
+              <p className="text-green-100 mt-3">
 
                 CO₂ Saved
 
@@ -575,9 +518,9 @@ function Profile() {
 
             </div>
 
-            <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-8 border border-white/20">
+            <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-6">
 
-              <h3 className="text-6xl font-black">
+              <h3 className="text-5xl font-black">
 
                 {Math.floor(
                   user.points * 2
@@ -585,7 +528,7 @@ function Profile() {
 
               </h3>
 
-              <p className="text-green-100 mt-3 text-lg">
+              <p className="text-green-100 mt-3">
 
                 Water Conserved
 
@@ -593,9 +536,9 @@ function Profile() {
 
             </div>
 
-            <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-8 border border-white/20">
+            <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-6">
 
-              <h3 className="text-6xl font-black">
+              <h3 className="text-5xl font-black">
 
                 {Math.floor(
                   user.points / 5
@@ -603,7 +546,7 @@ function Profile() {
 
               </h3>
 
-              <p className="text-green-100 mt-3 text-lg">
+              <p className="text-green-100 mt-3">
 
                 Plastic Avoided
 
@@ -613,7 +556,7 @@ function Profile() {
 
           </div>
 
-        </motion.div>
+        </div>
 
       </div>
 
