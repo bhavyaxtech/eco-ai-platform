@@ -3,7 +3,8 @@ import axios from 'axios';
 /* API */
 
 const API = axios.create({
-  baseURL: 'https://eco-ai-backend.onrender.com/api',
+  baseURL: 'https://eco-ai-backend-0y45.onrender.com/api'
+  ,
 });
 
 /* TYPES */
