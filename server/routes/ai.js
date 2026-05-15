@@ -14,6 +14,7 @@ const router = express.Router();
 
 router.post('/ask', async (req, res) => {
   try {
+
     const {
       question,
       userId,
@@ -21,6 +22,7 @@ router.post('/ask', async (req, res) => {
     } = req.body;
 
     if (!question) {
+
       return res.status(400).json({
         success: false,
         error: 'Question required',
@@ -34,6 +36,7 @@ router.post('/ask', async (req, res) => {
     ========================================= */
 
     if (chatId) {
+
       chat = await Chat.findById(chatId);
     }
 
@@ -42,6 +45,7 @@ router.post('/ask', async (req, res) => {
     ========================================= */
 
     if (!chat) {
+
       chat = await Chat.create({
         userId,
 
@@ -67,8 +71,7 @@ router.post('/ask', async (req, res) => {
       'https://openrouter.ai/api/v1/chat/completions',
 
       {
-        model:
-          'meta-llama/llama-3.1-8b-instruct',
+        model: 'openai/gpt-3.5-turbo',
 
         messages: [
           {
@@ -113,7 +116,7 @@ Your style:
           Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
 
           'HTTP-Referer':
-            'http://localhost:5173',
+            'https://eco-ai-platform.onrender.com',
 
           'X-Title':
             'EcoLearn AI',
@@ -124,10 +127,15 @@ Your style:
       }
     );
 
+    console.log(
+      'OPENROUTER RESPONSE:',
+      response.data
+    );
+
     const aiReply =
-      response.data.choices?.[0]
+      response.data?.choices?.[0]
         ?.message?.content ||
-      'No response';
+      'No response from AI';
 
     /* SAVE AI MESSAGE */
 
@@ -149,19 +157,20 @@ Your style:
 
       messages: chat.messages,
     });
+
   } catch (error) {
+
     console.log(
       'AI ERROR:',
       error.response?.data ||
-        error.message
+      error.message
     );
 
     res.status(500).json({
       success: false,
 
       error:
-        error.response?.data?.error
-          ?.message ||
+        error.response?.data?.error?.message ||
         error.message,
     });
   }
@@ -172,7 +181,9 @@ Your style:
 ====================================================== */
 
 router.get('/history/:userId', async (req, res) => {
+
   try {
+
     const chats = await Chat.find({
       userId: req.params.userId,
     }).sort({
@@ -183,7 +194,9 @@ router.get('/history/:userId', async (req, res) => {
       success: true,
       chats,
     });
+
   } catch (error) {
+
     console.log(error);
 
     res.status(500).json({
@@ -197,7 +210,9 @@ router.get('/history/:userId', async (req, res) => {
 ====================================================== */
 
 router.get('/chat/:chatId', async (req, res) => {
+
   try {
+
     const chat = await Chat.findById(
       req.params.chatId
     );
@@ -206,7 +221,9 @@ router.get('/chat/:chatId', async (req, res) => {
       success: true,
       chat,
     });
+
   } catch (error) {
+
     console.log(error);
 
     res.status(500).json({
@@ -222,7 +239,9 @@ router.get('/chat/:chatId', async (req, res) => {
 router.delete(
   '/delete/:chatId',
   async (req, res) => {
+
     try {
+
       await Chat.findByIdAndDelete(
         req.params.chatId
       );
@@ -232,7 +251,9 @@ router.delete(
         message:
           'Chat deleted successfully',
       });
+
     } catch (error) {
+
       console.log(error);
 
       res.status(500).json({
@@ -247,7 +268,9 @@ router.delete(
 ====================================================== */
 
 router.post('/report', async (req, res) => {
+
   try {
+
     const { topic } = req.body;
 
     const prompt = `
@@ -267,8 +290,7 @@ Include:
       'https://openrouter.ai/api/v1/chat/completions',
 
       {
-        model:
-          'meta-llama/llama-3.1-8b-instruct',
+        model: 'openai/gpt-3.5-turbo',
 
         messages: [
           {
@@ -294,7 +316,7 @@ Include:
           Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
 
           'HTTP-Referer':
-            'http://localhost:5173',
+            'https://eco-ai-platform.onrender.com',
 
           'X-Title':
             'EcoLearn AI',
@@ -305,20 +327,35 @@ Include:
       }
     );
 
+    console.log(
+      'REPORT RESPONSE:',
+      response.data
+    );
+
     const report =
-      response.data.choices?.[0]
-        ?.message?.content;
+      response.data?.choices?.[0]
+        ?.message?.content ||
+      'No report generated';
 
     res.json({
       success: true,
       report,
     });
+
   } catch (error) {
-    console.log(error);
+
+    console.log(
+      'REPORT ERROR:',
+      error.response?.data ||
+      error.message
+    );
 
     res.status(500).json({
       success: false,
-      error: 'Report failed',
+
+      error:
+        error.response?.data?.error?.message ||
+        error.message,
     });
   }
 });
