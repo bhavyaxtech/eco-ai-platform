@@ -1,0 +1,141 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background: #07111f;
+  color: white;
+  overflow-x: hidden;
+}
+
+/* GLOBAL */
+
+* {
+  box-sizing: border-box;
+}
+
+button {
+  cursor: pointer;
+}
+
+input,
+textarea {
+  outline: none;
+}
+
+/* SCROLLBAR */
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #07111f;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(
+    to bottom,
+    #10b981,
+    #059669
+  );
+  border-radius: 999px;
+}
+
+/* GLASS */
+
+.glass {
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+/* PREMIUM CARD */
+
+.premium-card {
+  background: linear-gradient(
+    to bottom right,
+    rgba(255,255,255,0.06),
+    rgba(255,255,255,0.03)
+  );
+
+  backdrop-filter: blur(24px);
+
+  border: 1px solid rgba(255,255,255,0.08);
+
+  box-shadow:
+    0 10px 40px rgba(0,0,0,0.35);
+
+  border-radius: 28px;
+}
+
+/* GREEN GLOW */
+
+.green-glow {
+  box-shadow:
+    0 0 40px rgba(16,185,129,0.35);
+}
+
+/* ANIMATED BACKGROUND */
+
+.bg-grid {
+  background-image:
+    linear-gradient(
+      rgba(255,255,255,0.03) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(255,255,255,0.03) 1px,
+      transparent 1px
+    );
+
+  background-size: 40px 40px;
+}
+
+/* TEXT GRADIENT */
+
+.text-gradient {
+  background: linear-gradient(
+    to right,
+    #10b981,
+    #34d399
+  );
+
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* BUTTON */
+
+.btn-primary {
+
+  background: linear-gradient(
+    to right,
+    #10b981,
+    #059669
+  );
+
+  color: white;
+
+  border-radius: 18px;
+
+  transition: 0.3s ease;
+
+  box-shadow:
+    0 10px 30px rgba(16,185,129,0.3);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 15px 40px rgba(16,185,129,0.4);
+}
