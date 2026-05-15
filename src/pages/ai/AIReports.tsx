@@ -45,7 +45,7 @@ function AIReports() {
     try {
 
       const response = await fetch(
-        'http://localhost:5000/api/ai/ask',
+        'https://eco-ai-backend-0y45.onrender.com/api/ai/ask',
         {
           method: 'POST',
 
