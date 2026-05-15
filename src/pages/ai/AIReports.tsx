@@ -14,21 +14,13 @@ import {
 function AIReports() {
 
   const [topic, setTopic] = useState('');
+  const [industry, setIndustry] = useState('');
+  const [region, setRegion] = useState('');
+  const [goal, setGoal] = useState('');
 
-  const [industry, setIndustry] =
-    useState('');
+  const [loading, setLoading] = useState(false);
 
-  const [region, setRegion] =
-    useState('');
-
-  const [goal, setGoal] =
-    useState('');
-
-  const [loading, setLoading] =
-    useState(false);
-
-  const [report, setReport] =
-    useState('');
+  const [report, setReport] = useState('');
 
   const generateReport = async () => {
 
@@ -37,10 +29,16 @@ function AIReports() {
       !industry ||
       !region ||
       !goal
-    )
+    ) {
+
+      alert('Please fill all fields');
+
       return;
+    }
 
     setLoading(true);
+
+    setReport('');
 
     try {
 
@@ -50,8 +48,7 @@ function AIReports() {
           method: 'POST',
 
           headers: {
-            'Content-Type':
-              'application/json',
+            'Content-Type': 'application/json',
           },
 
           body: JSON.stringify({
@@ -88,14 +85,35 @@ Make the report professional, modern, and business-ready.
         }
       );
 
-      const data =
-        await response.json();
+      const data = await response.json();
 
-      setReport(data.answer);
+      console.log('FULL AI RESPONSE:', data);
 
-    } catch (error) {
+      if (!response.ok) {
 
-      console.log(error);
+        throw new Error(
+          data.message ||
+          'Failed to generate report'
+        );
+      }
+
+      const aiText =
+        data.answer ||
+        data.response ||
+        data.reply ||
+        data.result ||
+        JSON.stringify(data);
+
+      setReport(aiText);
+
+    } catch (error: any) {
+
+      console.log('AI REPORT ERROR:', error);
+
+      alert(
+        error.message ||
+        'Something went wrong'
+      );
 
     } finally {
 
@@ -150,6 +168,7 @@ Make the report professional, modern, and business-ready.
                 Generate professional environmental and sustainability reports
                 powered by AI with actionable insights, automation strategies,
                 and eco-friendly recommendations.
+
               </p>
 
             </div>
@@ -163,9 +182,7 @@ Make the report professional, modern, and business-ready.
                 <Leaf className="text-green-400 mx-auto mb-2 h-6 w-6" />
 
                 <p className="text-white font-bold">
-
                   Eco
-
                 </p>
 
               </div>
@@ -175,9 +192,7 @@ Make the report professional, modern, and business-ready.
                 <Brain className="text-cyan-400 mx-auto mb-2 h-6 w-6" />
 
                 <p className="text-white font-bold">
-
                   AI
-
                 </p>
 
               </div>
@@ -187,9 +202,7 @@ Make the report professional, modern, and business-ready.
                 <Globe className="text-purple-400 mx-auto mb-2 h-6 w-6" />
 
                 <p className="text-white font-bold">
-
                   Global
-
                 </p>
 
               </div>
@@ -202,103 +215,43 @@ Make the report professional, modern, and business-ready.
 
           <div className="grid md:grid-cols-2 gap-5">
 
-            {/* TOPIC */}
+            <input
+              value={topic}
+              onChange={(e) => setTopic(e.target.value)}
+              placeholder="Sustainability Topic"
+              className="w-full p-4 rounded-2xl bg-[#111827] border border-white/10 text-white"
+            />
 
-            <div>
+            <input
+              value={industry}
+              onChange={(e) => setIndustry(e.target.value)}
+              placeholder="Industry"
+              className="w-full p-4 rounded-2xl bg-[#111827] border border-white/10 text-white"
+            />
 
-              <label className="text-gray-300 text-sm font-semibold mb-2 block">
+            <input
+              value={region}
+              onChange={(e) => setRegion(e.target.value)}
+              placeholder="Region"
+              className="w-full p-4 rounded-2xl bg-[#111827] border border-white/10 text-white"
+            />
 
-                Sustainability Topic
-
-              </label>
-
-              <input
-                value={topic}
-                onChange={(e) =>
-                  setTopic(e.target.value)
-                }
-                placeholder="e.g. Renewable Energy"
-                className="w-full p-4 rounded-2xl bg-[#111827] border border-white/10 text-white outline-none focus:border-green-500 transition-all"
-              />
-
-            </div>
-
-            {/* INDUSTRY */}
-
-            <div>
-
-              <label className="text-gray-300 text-sm font-semibold mb-2 block">
-
-                Industry
-
-              </label>
-
-              <input
-                value={industry}
-                onChange={(e) =>
-                  setIndustry(
-                    e.target.value
-                  )
-                }
-                placeholder="e.g. Manufacturing"
-                className="w-full p-4 rounded-2xl bg-[#111827] border border-white/10 text-white outline-none focus:border-green-500 transition-all"
-              />
-
-            </div>
-
-            {/* REGION */}
-
-            <div>
-
-              <label className="text-gray-300 text-sm font-semibold mb-2 block">
-
-                Region / Country
-
-              </label>
-
-              <input
-                value={region}
-                onChange={(e) =>
-                  setRegion(
-                    e.target.value
-                  )
-                }
-                placeholder="e.g. India"
-                className="w-full p-4 rounded-2xl bg-[#111827] border border-white/10 text-white outline-none focus:border-green-500 transition-all"
-              />
-
-            </div>
-
-            {/* GOAL */}
-
-            <div>
-
-              <label className="text-gray-300 text-sm font-semibold mb-2 block">
-
-                Main Goal
-
-              </label>
-
-              <input
-                value={goal}
-                onChange={(e) =>
-                  setGoal(e.target.value)
-                }
-                placeholder="e.g. Reduce Carbon Emissions"
-                className="w-full p-4 rounded-2xl bg-[#111827] border border-white/10 text-white outline-none focus:border-green-500 transition-all"
-              />
-
-            </div>
+            <input
+              value={goal}
+              onChange={(e) => setGoal(e.target.value)}
+              placeholder="Goal"
+              className="w-full p-4 rounded-2xl bg-[#111827] border border-white/10 text-white"
+            />
 
           </div>
 
           {/* BUTTON */}
 
-          <div className="mt-8 flex flex-wrap gap-4">
+          <div className="mt-8">
 
             <button
               onClick={generateReport}
-              className="bg-green-500 hover:bg-green-600 transition-all duration-300 px-8 py-4 rounded-2xl text-white font-bold flex items-center gap-3 shadow-lg hover:scale-[1.02]"
+              className="bg-green-500 hover:bg-green-600 px-8 py-4 rounded-2xl text-white font-bold flex items-center gap-3"
             >
 
               {loading ? (
@@ -315,110 +268,31 @@ Make the report professional, modern, and business-ready.
 
             </button>
 
-            {report && (
-
-              <button
-                className="bg-white/10 hover:bg-white/20 transition-all duration-300 px-8 py-4 rounded-2xl text-white font-bold flex items-center gap-3 border border-white/10"
-              >
-
-                <Download className="h-5 w-5" />
-
-                Download Report
-
-              </button>
-
-            )}
-
           </div>
 
         </div>
-
-        {/* LOADING */}
-
-        {loading && (
-
-          <div className="mt-8 bg-white rounded-3xl p-8 shadow-xl border border-green-100">
-
-            <div className="flex items-center gap-4 text-green-600">
-
-              <Loader2 className="animate-spin h-8 w-8" />
-
-              <div>
-
-                <h2 className="text-xl font-black">
-
-                  AI is Generating Your Sustainability Report...
-
-                </h2>
-
-                <p className="text-gray-500 mt-1">
-
-                  Analyzing environmental data and generating recommendations.
-                </p>
-
-              </div>
-
-            </div>
-
-          </div>
-
-        )}
 
         {/* REPORT */}
 
         {report && (
 
-          <div className="mt-8 bg-white rounded-[32px] shadow-2xl border border-green-100 overflow-hidden">
+          <div className="mt-8 bg-white rounded-[32px] shadow-2xl overflow-hidden">
 
-            {/* HEADER */}
+            <div className="bg-gradient-to-r from-green-500 to-emerald-600 p-6 text-white">
 
-            <div className="bg-gradient-to-r from-green-500 to-emerald-600 p-6 md:p-8 text-white">
+              <h2 className="text-3xl font-black">
 
-              <div className="flex items-center gap-4">
+                AI Generated Report
 
-                <div className="w-14 h-14 rounded-2xl bg-white/20 flex items-center justify-center">
-
-                  <FileText className="h-7 w-7" />
-
-                </div>
-
-                <div>
-
-                  <h2 className="text-3xl font-black">
-
-                    AI Generated Report
-
-                  </h2>
-
-                  <p className="text-green-50 mt-1">
-
-                    Professional sustainability analysis powered by AI.
-                  </p>
-
-                </div>
-
-              </div>
+              </h2>
 
             </div>
 
-            {/* CONTENT */}
+            <div className="p-8">
 
-            <div className="p-6 md:p-10">
+              <div className="bg-[#0f172a] rounded-3xl p-6">
 
-              <div className="flex items-center gap-3 mb-8 text-green-600">
-
-                <CheckCircle2 className="h-6 w-6" />
-
-                <p className="font-semibold">
-
-                  Report Successfully Generated
-                </p>
-
-              </div>
-
-              <div className="bg-[#0f172a] rounded-3xl p-6 md:p-8 border border-white/5">
-
-                <div className="text-gray-300 whitespace-pre-wrap leading-[2rem] text-sm md:text-base">
+                <div className="text-gray-300 whitespace-pre-wrap leading-[2rem]">
 
                   {report}
 
