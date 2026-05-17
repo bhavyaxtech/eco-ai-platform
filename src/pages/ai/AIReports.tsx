@@ -1,11 +1,8 @@
 import React, { useState } from 'react';
 
 import {
-  FileText,
   Sparkles,
-  Download,
   Loader2,
-  CheckCircle2,
   Leaf,
   Globe,
   Brain,
@@ -32,18 +29,18 @@ function AIReports() {
     ) {
 
       alert('Please fill all fields');
-
       return;
     }
 
     setLoading(true);
-
     setReport('');
 
     try {
 
+      console.log('Sending report request...');
+
       const response = await fetch(
-        'https://eco-ai-backend-0y45.onrender.com/api/ai/ask',
+        'https://eco-ai-backend-0y45.onrender.com/api/ai/report',
         {
           method: 'POST',
 
@@ -52,7 +49,7 @@ function AIReports() {
           },
 
           body: JSON.stringify({
-            question: `
+            topic: `
 Generate a professional AI Sustainability Report.
 
 Topic:
@@ -85,34 +82,35 @@ Make the report professional, modern, and business-ready.
         }
       );
 
+      console.log('Response status:', response.status);
+
       const data = await response.json();
 
-      console.log('FULL AI RESPONSE:', data);
+      console.log('FULL RESPONSE:', data);
 
       if (!response.ok) {
 
         throw new Error(
-          data.message ||
+          data.error ||
           'Failed to generate report'
         );
       }
 
-      const aiText =
-        data.answer ||
-        data.response ||
-        data.reply ||
-        data.result ||
-        JSON.stringify(data);
-
-      setReport(aiText);
+      setReport(
+        data.report ||
+        'No report generated'
+      );
 
     } catch (error: any) {
 
-      console.log('AI REPORT ERROR:', error);
+      console.log(
+        'REPORT ERROR:',
+        error
+      );
 
       alert(
         error.message ||
-        'Something went wrong'
+        'Backend failed'
       );
 
     } finally {
@@ -166,8 +164,7 @@ Make the report professional, modern, and business-ready.
               <p className="text-gray-400 max-w-3xl text-sm md:text-lg leading-relaxed">
 
                 Generate professional environmental and sustainability reports
-                powered by AI with actionable insights, automation strategies,
-                and eco-friendly recommendations.
+                powered by AI with actionable insights and eco-friendly recommendations.
 
               </p>
 
