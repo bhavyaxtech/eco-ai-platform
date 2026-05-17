@@ -239,7 +239,7 @@ Ask me anything 🌱`,
     try {
 
       const res = await axios.post(
-        'http://127.0.0.1:5000/api/ai/ask',
+        'https://eco-ai-backend-0y45.onrender.com/api',
         {
           question: finalMessage,
           userId: 'demo-user',
